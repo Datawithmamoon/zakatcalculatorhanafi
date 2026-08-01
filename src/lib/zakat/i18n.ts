@@ -15,6 +15,69 @@ export interface StepCopy {
   fields: Record<string, string>;
 }
 
+export type LabelKey =
+  | "included"
+  | "excluded"
+  | "mistakes"
+  | "ruling"
+  | "evidence"
+  | "weight"
+  | "unit"
+  | "gram"
+  | "tola"
+  | "purity"
+  | "pricePerGram"
+  | "autofill"
+  | "value"
+  | "learn"
+  | "total"
+  | "nisabBasis"
+  | "silverNisab"
+  | "goldNisab"
+  | "manual"
+  | "silver"
+  | "gold"
+  | "theme"
+  | "language";
+
+export type StepKey =
+  | "hawl"
+  | "gold"
+  | "silver"
+  | "cash"
+  | "business"
+  | "investments"
+  | "receivables"
+  | "agriculture"
+  | "livestock"
+  | "excluded"
+  | "liabilities";
+
+export type ResultKey =
+  | "title"
+  | "gold"
+  | "silver"
+  | "cash"
+  | "business"
+  | "investments"
+  | "receivables"
+  | "totalAssets"
+  | "liabilities"
+  | "netWealth"
+  | "nisab"
+  | "zakatDue"
+  | "rate"
+  | "notDue"
+  | "notDueWhy"
+  | "noHawl"
+  | "due"
+  | "print"
+  | "pdf"
+  | "share"
+  | "again"
+  | "edit";
+
+
 export interface Dict {
   dir: "ltr" | "rtl";
   appName: string;

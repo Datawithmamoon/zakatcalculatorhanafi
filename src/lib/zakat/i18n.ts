@@ -31,9 +31,10 @@ export interface Dict {
   optional: string;
   skip: string;
   calculate: string;
-  labels: Record<string, string>;
-  steps: Record<string, StepCopy>;
-  results: Record<string, string>;
+  labels: Record<LabelKey, string>;
+  steps: Record<StepKey, StepCopy>;
+  results: Record<ResultKey, string>;
+
   disclaimer: string;
   savedNote: string;
 }

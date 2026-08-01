@@ -137,9 +137,6 @@ export function ResultsView({ onEdit, onReset }: { onEdit: () => void; onReset: 
         </div>
         <p className="flex gap-2 rounded-lg bg-muted p-3 text-sm text-muted-foreground">
           <Info className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
-          {t.lang === "ur"
-            ? ""
-            : ""}
           {t.dir === "rtl"
             ? "فقہ حنفی میں نقدی اور مخلوط اموال کے لیے عموماً چاندی کا نصاب اختیار کیا جاتا ہے تاکہ فقراء کو زیادہ فائدہ ہو۔"
             : "The Hanafi school generally applies the silver Nisab to cash and mixed assets, as it is more beneficial to the poor."}

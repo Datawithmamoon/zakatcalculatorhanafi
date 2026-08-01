@@ -1,0 +1,10 @@
+{
+  "name": "Hanafi Zakat Calculator",
+  "short_name": "Zakat",
+  "description": "Calculate Zakat according to Hanafi jurisprudence in English and Urdu.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7fbf8",
+  "theme_color": "#0f5132",
+  "icons": [{ "src": "/favicon.ico", "sizes": "48x48", "type": "image/x-icon" }]
+}

@@ -10,19 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { sum, calculateZakat } from "@/lib/zakat/engine";
 
-const STEPS: StepKey[] = [
-  "hawl",
-  "gold",
-  "silver",
-  "cash",
-  "business",
-  "investments",
-  "receivables",
-  "agriculture",
-  "livestock",
-  "excluded",
-  "liabilities",
-];
 
 type MoneyGroup = "cash" | "business" | "investments" | "liabilities";
 const MONEY_GROUPS: Partial<Record<StepKey, MoneyGroup>> = {

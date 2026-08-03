@@ -1,6 +1,12 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { dictionaries, type Dict, type Lang } from "@/lib/zakat/i18n";
-import { defaultInput, type ZakatInput } from "@/lib/zakat/engine";
+import {
+  defaultInput,
+  DEFAULT_GOLD_PRICE,
+  DEFAULT_SILVER_PRICE,
+  type ZakatInput,
+} from "@/lib/zakat/engine";
+import { useSettings, type AppSettings } from "@/lib/settings";
 
 const STORAGE_KEY = "hanafi-zakat-state-v1";
 

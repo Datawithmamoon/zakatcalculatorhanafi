@@ -76,9 +76,28 @@ export function ZakatProvider({ children }: { children: ReactNode }) {
     root.dir = lang === "ur" ? "rtl" : "ltr";
   }, [dark, highContrast, lang]);
 
+  // Admin-managed prices: applied unless the user typed their own price.
+  const { data: settings } = useSettings();
+  useEffect(() => {
+    if (!settings || !hydrated) return;
+    setInput((prev) => ({
+      ...prev,
+      gold:
+        prev.gold.pricePerGram === DEFAULT_GOLD_PRICE
+          ? { ...prev.gold, pricePerGram: Number(settings.gold_price_per_gram) }
+          : prev.gold,
+      silver:
+        prev.silver.pricePerGram === DEFAULT_SILVER_PRICE
+          ? { ...prev.silver, pricePerGram: Number(settings.silver_price_per_gram) }
+          : prev.silver,
+    }));
+  }, [settings, hydrated]);
+
   const value = useMemo<Ctx>(
     () => ({
-      t: dictionaries[lang],
+      t: settings
+        ? { ...dictionaries[lang], currency: settings.currency_symbol }
+        : dictionaries[lang],
       lang,
       setLang,
       dark,
@@ -87,12 +106,13 @@ export function ZakatProvider({ children }: { children: ReactNode }) {
       setHighContrast,
       input,
       hydrated,
+      settings: settings ?? null,
       update: (patch) => setInput((prev) => ({ ...prev, ...patch })),
       setMoney: (group, key, v) =>
         setInput((prev) => ({ ...prev, [group]: { ...prev[group], [key]: v } })),
       reset: () => setInput(defaultInput()),
     }),
-    [lang, dark, highContrast, input, hydrated],
+    [lang, dark, highContrast, input, hydrated, settings],
   );
 
   return <ZakatContext.Provider value={value}>{children}</ZakatContext.Provider>;

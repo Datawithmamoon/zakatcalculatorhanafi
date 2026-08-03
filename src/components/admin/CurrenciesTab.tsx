@@ -23,7 +23,10 @@ export function CurrenciesTab() {
   const saveRate = async (code: string, name: string) => {
     const raw = edits[code];
     const rate = Number(raw);
-    if (!Number.isFinite(rate) || rate <= 0) return toast.error("Enter a valid rate");
+    if (!Number.isFinite(rate) || rate <= 0) {
+      toast.error("Enter a valid rate");
+      return;
+    }
     await upsert.mutateAsync({
       code,
       name,
@@ -37,7 +40,10 @@ export function CurrenciesTab() {
 
   const add = async () => {
     const rate = Number(next.rate);
-    if (!next.code || !Number.isFinite(rate) || rate <= 0) return toast.error("Code and rate required");
+    if (!next.code || !Number.isFinite(rate) || rate <= 0) {
+      toast.error("Code and rate required");
+      return;
+    }
     await upsert.mutateAsync({
       code: next.code.toUpperCase(),
       name: next.name || next.code.toUpperCase(),

@@ -53,7 +53,8 @@ export function PricesTab() {
 
   if (!settings) return <p className="text-sm text-muted-foreground">Loading settings…</p>;
 
-  const val = (k: keyof typeof settings) => draft[k] ?? String(settings[k] ?? "");
+  const val = (k: string) =>
+    draft[k] ?? String((settings as unknown as Record<string, unknown>)[k] ?? "");
   const set = (k: string) => (v: string) => setDraft((d) => ({ ...d, [k]: v }));
 
   const baseRate =

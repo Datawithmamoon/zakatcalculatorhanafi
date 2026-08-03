@@ -53,6 +53,7 @@ export function Wizard() {
   if (showResults) {
     return (
       <ResultsView
+        presetId={presetId}
         onEdit={() => setShowResults(false)}
         onReset={() => {
           reset();
@@ -65,15 +66,39 @@ export function Wizard() {
 
   return (
     <div className="space-y-6">
+      <div className="no-print space-y-3 rounded-2xl border bg-card p-4 shadow-soft">
+        <p className="text-sm font-semibold">
+          {lang === "ur" ? "تیز ٹیمپلیٹ منتخب کریں" : "Choose a quick template"}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {PRESETS.map((p) => (
+            <ChoiceButton
+              key={p.id}
+              active={presetId === p.id}
+              onClick={() => {
+                setPresetId(p.id);
+                setIndex(0);
+              }}
+            >
+              {lang === "ur" ? p.labelUr : p.labelEn}
+            </ChoiceButton>
+          ))}
+        </div>
+        <p className="text-xs text-muted-foreground">
+          {lang === "ur" ? presetById(presetId).descUr : presetById(presetId).descEn}
+        </p>
+      </div>
+
       <div className="no-print space-y-2">
         <div className="flex items-center justify-between text-xs font-medium text-muted-foreground">
           <span>
-            {t.step} {index + 1} {t.of} {STEPS.length}
+            {t.step} {index + 1} {t.of} {steps.length}
           </span>
-          <span>{Math.round(((index + 1) / STEPS.length) * 100)}%</span>
+          <span>{Math.round(((index + 1) / steps.length) * 100)}%</span>
         </div>
-        <Progress value={((index + 1) / STEPS.length) * 100} className="h-1.5" />
+        <Progress value={((index + 1) / steps.length) * 100} className="h-1.5" />
       </div>
+
 
       <section className="rounded-2xl border bg-card p-5 shadow-soft sm:p-7">
         <header className="mb-5">

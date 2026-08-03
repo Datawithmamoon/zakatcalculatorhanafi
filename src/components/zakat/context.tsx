@@ -29,6 +29,7 @@ interface Ctx {
   setMoney: (group: "cash" | "business" | "investments" | "liabilities", key: string, v: number) => void;
   reset: () => void;
   hydrated: boolean;
+  settings: AppSettings | null;
 }
 
 const ZakatContext = createContext<Ctx | null>(null);

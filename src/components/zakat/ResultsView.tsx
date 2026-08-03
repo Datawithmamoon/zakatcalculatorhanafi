@@ -1,15 +1,57 @@
 import { useMemo } from "react";
-import { Download, Printer, Share2, RotateCcw, Pencil, CircleCheckBig, Info } from "lucide-react";
+import {
+  Download,
+  Printer,
+  Share2,
+  RotateCcw,
+  Pencil,
+  CircleCheckBig,
+  Info,
+  FileJson,
+  Sheet,
+} from "lucide-react";
 import { calculateZakat, NISAB_GOLD_GRAMS, NISAB_SILVER_GRAMS } from "@/lib/zakat/engine";
+import { buildPayload, toCsv, downloadFile, fileStamp } from "@/lib/zakat/export";
+import type { PresetId } from "@/lib/zakat/presets";
 import { useZakat } from "./context";
 import { ChoiceButton, Money } from "./bits";
 import { MoneyInput } from "./bits";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-export function ResultsView({ onEdit, onReset }: { onEdit: () => void; onReset: () => void }) {
-  const { t, input, update } = useZakat();
+export function ResultsView({
+  onEdit,
+  onReset,
+  presetId,
+}: {
+  onEdit: () => void;
+  onReset: () => void;
+  presetId?: PresetId;
+}) {
+  const { t, input, update, settings } = useZakat();
   const r = useMemo(() => calculateZakat(input), [input]);
+
+  const payload = () =>
+    buildPayload(input, r, {
+      currency: t.currency,
+      preset: presetId ?? "custom",
+      priceSource: settings?.price_source ?? "manual",
+    });
+
+  const exportJson = () => {
+    downloadFile(
+      `zakat-${fileStamp()}.json`,
+      JSON.stringify(payload(), null, 2),
+      "application/json",
+    );
+    toast.success("JSON downloaded");
+  };
+
+  const exportCsv = () => {
+    downloadFile(`zakat-${fileStamp()}.csv`, toCsv(payload()), "text/csv;charset=utf-8");
+    toast.success("CSV downloaded");
+  };
+
 
   const rows: Array<[string, number]> = [
     [t.results.gold ?? "", r.goldValue],
@@ -149,6 +191,12 @@ export function ResultsView({ onEdit, onReset }: { onEdit: () => void; onReset: 
         </Button>
         <Button variant="secondary" onClick={() => window.print()}>
           <Download className="size-4" aria-hidden /> {t.results.pdf}
+        </Button>
+        <Button variant="secondary" onClick={exportCsv}>
+          <Sheet className="size-4" aria-hidden /> CSV
+        </Button>
+        <Button variant="secondary" onClick={exportJson}>
+          <FileJson className="size-4" aria-hidden /> JSON
         </Button>
         <Button variant="secondary" onClick={share}>
           <Share2 className="size-4" aria-hidden /> {t.results.share}

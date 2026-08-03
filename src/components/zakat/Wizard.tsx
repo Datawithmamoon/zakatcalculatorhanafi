@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Ban, RotateCcw } from "lucide-react";
 import type { StepKey } from "@/lib/zakat/i18n";
+import { PRESETS, presetById, type PresetId } from "@/lib/zakat/presets";
 import { useZakat } from "./context";
 import { ChoiceButton, EduPanel, Money, MoneyInput } from "./bits";
 import { MetalStep } from "./MetalStep";
@@ -32,17 +33,19 @@ const MONEY_GROUPS: Partial<Record<StepKey, MoneyGroup>> = {
 };
 
 export function Wizard() {
-  const { t, input, update, setMoney, reset } = useZakat();
+  const { t, lang, input, update, setMoney, reset } = useZakat();
   const [index, setIndex] = useState(0);
   const [showResults, setShowResults] = useState(false);
+  const [presetId, setPresetId] = useState<PresetId>("full");
 
-  const stepKey = STEPS[index] as StepKey;
+  const steps = useMemo(() => presetById(presetId).steps, [presetId]);
+  const stepKey = (steps[index] ?? steps[0]) as StepKey;
   const copy = t.steps[stepKey];
   const group = MONEY_GROUPS[stepKey];
   const result = useMemo(() => calculateZakat(input), [input]);
 
   const blockedByHawl = stepKey === "hawl" && !input.hawlCompleted;
-  const isLast = index === STEPS.length - 1;
+  const isLast = index === steps.length - 1;
 
   const goNext = () => (isLast ? setShowResults(true) : setIndex((i) => i + 1));
   const goBack = () => setIndex((i) => Math.max(0, i - 1));

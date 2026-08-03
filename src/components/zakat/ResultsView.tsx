@@ -34,7 +34,7 @@ export function ResultsView({
   const payload = () =>
     buildPayload(input, r, {
       currency: t.currency,
-      preset: presetId,
+      preset: presetId ?? "custom",
       priceSource: settings?.price_source ?? "manual",
     });
 

@@ -81,6 +81,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "Hanafi Zakat Calculator" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { title: "Zakat calculator hanafi" },
+      { property: "og:title", content: "Zakat calculator hanafi" },
+      { name: "twitter:title", content: "Zakat calculator hanafi" },
+      { name: "description", content: "An Islamic Zakat calculator for Muslims to accurately determine Zakat obligations based on Hanafi Fiqh." },
+      { property: "og:description", content: "An Islamic Zakat calculator for Muslims to accurately determine Zakat obligations based on Hanafi Fiqh." },
+      { name: "twitter:description", content: "An Islamic Zakat calculator for Muslims to accurately determine Zakat obligations based on Hanafi Fiqh." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2da851d5-fa22-4dd5-bdfc-9953645d4a30/id-preview-bdd0636c--67067ddc-e50d-4052-bb0e-2c643100c29f.lovable.app-1785717425223.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2da851d5-fa22-4dd5-bdfc-9953645d4a30/id-preview-bdd0636c--67067ddc-e50d-4052-bb0e-2c643100c29f.lovable.app-1785717425223.png" },
     ],
     links: [
       {
@@ -94,7 +102,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap",
       },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
 

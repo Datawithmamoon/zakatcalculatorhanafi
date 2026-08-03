@@ -14,16 +14,219 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      app_settings: {
+        Row: {
+          auto_refresh_enabled: boolean
+          base_currency: string
+          currency_symbol: string
+          default_nisab_basis: string
+          gold_price_per_gram: number
+          id: string
+          nisab_gold_grams: number
+          nisab_silver_grams: number
+          price_source: string
+          price_source_url: string
+          prices_updated_at: string
+          refresh_interval_minutes: number
+          silver_price_per_gram: number
+          updated_at: string
+          zakat_rate: number
+        }
+        Insert: {
+          auto_refresh_enabled?: boolean
+          base_currency?: string
+          currency_symbol?: string
+          default_nisab_basis?: string
+          gold_price_per_gram?: number
+          id?: string
+          nisab_gold_grams?: number
+          nisab_silver_grams?: number
+          price_source?: string
+          price_source_url?: string
+          prices_updated_at?: string
+          refresh_interval_minutes?: number
+          silver_price_per_gram?: number
+          updated_at?: string
+          zakat_rate?: number
+        }
+        Update: {
+          auto_refresh_enabled?: boolean
+          base_currency?: string
+          currency_symbol?: string
+          default_nisab_basis?: string
+          gold_price_per_gram?: number
+          id?: string
+          nisab_gold_grams?: number
+          nisab_silver_grams?: number
+          price_source?: string
+          price_source_url?: string
+          prices_updated_at?: string
+          refresh_interval_minutes?: number
+          silver_price_per_gram?: number
+          updated_at?: string
+          zakat_rate?: number
+        }
+        Relationships: []
+      }
+      currency_rates: {
+        Row: {
+          code: string
+          name: string
+          rate_per_usd: number
+          source: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          name: string
+          rate_per_usd: number
+          source?: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          name?: string
+          rate_per_usd?: number
+          source?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      educational_content: {
+        Row: {
+          body_en: string
+          body_ur: string
+          category: string
+          created_at: string
+          id: string
+          published: boolean
+          slug: string
+          sort_order: number
+          title_en: string
+          title_ur: string
+          updated_at: string
+        }
+        Insert: {
+          body_en: string
+          body_ur?: string
+          category?: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          slug: string
+          sort_order?: number
+          title_en: string
+          title_ur?: string
+          updated_at?: string
+        }
+        Update: {
+          body_en?: string
+          body_ur?: string
+          category?: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          slug?: string
+          sort_order?: number
+          title_en?: string
+          title_ur?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      faqs: {
+        Row: {
+          answer_en: string
+          answer_ur: string
+          created_at: string
+          id: string
+          published: boolean
+          question_en: string
+          question_ur: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          answer_en: string
+          answer_ur?: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          question_en: string
+          question_ur?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          answer_en?: string
+          answer_ur?: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          question_en?: string
+          question_ur?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +353,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const

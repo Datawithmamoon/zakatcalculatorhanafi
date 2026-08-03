@@ -192,6 +192,12 @@ export function ResultsView({
         <Button variant="secondary" onClick={() => window.print()}>
           <Download className="size-4" aria-hidden /> {t.results.pdf}
         </Button>
+        <Button variant="secondary" onClick={exportCsv}>
+          <Sheet className="size-4" aria-hidden /> CSV
+        </Button>
+        <Button variant="secondary" onClick={exportJson}>
+          <FileJson className="size-4" aria-hidden /> JSON
+        </Button>
         <Button variant="secondary" onClick={share}>
           <Share2 className="size-4" aria-hidden /> {t.results.share}
         </Button>

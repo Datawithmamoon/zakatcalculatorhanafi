@@ -28,11 +28,7 @@ export const claimFirstAdmin = createServerFn({ method: "POST" })
 export const listMembers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (!isAdmin) throw new Error("Forbidden");
+    await assertAdmin(context);
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const [{ data: profiles }, { data: roles }] = await Promise.all([

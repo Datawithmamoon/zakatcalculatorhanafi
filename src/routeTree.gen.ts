@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as GuideRouteImport } from './routes/guide'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
 const IndexRoute = IndexRouteImport.update({
@@ -34,6 +35,11 @@ const FaqRoute = FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuideRoute = GuideRouteImport.update({
+  id: '/guide',
+  path: '/guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -44,12 +50,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/faq': typeof FaqRoute
+  '/guide': typeof GuideRoute
   '/admin': typeof AuthenticatedAdminRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/faq': typeof FaqRoute
+  '/guide': typeof GuideRoute
   '/admin': typeof AuthenticatedAdminRoute
 }
 export interface FileRoutesById {
@@ -58,19 +66,21 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/faq': typeof FaqRoute
+  '/guide': typeof GuideRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/faq' | '/admin'
+  fullPaths: '/' | '/auth' | '/faq' | '/guide' | '/admin'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/faq' | '/admin'
+  to: '/' | '/auth' | '/faq' | '/guide' | '/admin'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/faq'
+    | '/guide'
     | '/_authenticated/admin'
   fileRoutesById: FileRoutesById
 }
@@ -79,6 +89,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   FaqRoute: typeof FaqRoute
+  GuideRoute: typeof GuideRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -111,6 +122,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guide': {
+      id: '/guide'
+      path: '/guide'
+      fullPath: '/guide'
+      preLoaderRoute: typeof GuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -137,6 +155,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   FaqRoute: FaqRoute,
+  GuideRoute: GuideRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

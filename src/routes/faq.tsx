@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PublicShell } from "@/components/PublicShell";
-import { getPublicFaqs } from "@/lib/public-content.functions";
+import { getPublicFaqs, type PublicFaq } from "@/lib/public-content.functions";
 import {
   Accordion,
   AccordionContent,
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/faq")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: (loaderData?.faqs ?? []).map((f) => ({
+          mainEntity: ((loaderData?.faqs ?? []) as PublicFaq[]).map((f: PublicFaq) => ({
             "@type": "Question",
             name: f.question_en,
             acceptedAnswer: { "@type": "Answer", text: f.answer_en },
@@ -55,7 +55,7 @@ export const Route = createFileRoute("/faq")({
 });
 
 function FaqPage() {
-  const { faqs } = Route.useLoaderData();
+  const { faqs } = Route.useLoaderData() as { faqs: PublicFaq[] };
 
   return (
     <PublicShell>

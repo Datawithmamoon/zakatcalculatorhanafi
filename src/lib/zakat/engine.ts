@@ -87,6 +87,44 @@ export const num = (v: unknown): number => {
   return Number.isFinite(n) && n > 0 ? n : 0;
 };
 
+/** Admin-managed thresholds; falls back to the classical Hanafi constants. */
+export interface ZakatConfig {
+  nisabGoldGrams: number;
+  nisabSilverGrams: number;
+  zakatRate: number;
+}
+
+export const DEFAULT_CONFIG: ZakatConfig = {
+  nisabGoldGrams: NISAB_GOLD_GRAMS,
+  nisabSilverGrams: NISAB_SILVER_GRAMS,
+  zakatRate: ZAKAT_RATE,
+};
+
+const resolveConfig = (c?: Partial<ZakatConfig>): ZakatConfig => ({
+  nisabGoldGrams: num(c?.nisabGoldGrams) || NISAB_GOLD_GRAMS,
+  nisabSilverGrams: num(c?.nisabSilverGrams) || NISAB_SILVER_GRAMS,
+  zakatRate: num(c?.zakatRate) || ZAKAT_RATE,
+});
+
+export type ParsedAmount = { value: number; error: "invalid" | "negative" | null };
+
+/**
+ * Strict numeric parsing for user-typed money values.
+ * Typos ("12o0"), stray characters and negatives surface as errors instead of
+ * silently collapsing to 0. Partial entries ("0.", "") are treated as 0 with no error.
+ */
+export function parseAmount(raw: string): ParsedAmount {
+  const s = raw.trim().replace(/[\s,]/g, "");
+  if (s === "" || s === "." || /^\d*\.$/.test(s)) {
+    return { value: s === "" ? 0 : Number(s.slice(0, -1) || 0), error: null };
+  }
+  if (/^-/.test(s)) return { value: 0, error: "negative" };
+  if (!/^\d*(\.\d+)?$/.test(s)) return { value: 0, error: "invalid" };
+  const n = Number(s);
+  if (!Number.isFinite(n)) return { value: 0, error: "invalid" };
+  return { value: n, error: null };
+}
+
 export const sum = (record: Record<string, number> | undefined): number =>
   Object.values(record ?? {}).reduce<number>((a, b) => a + num(b), 0);
 

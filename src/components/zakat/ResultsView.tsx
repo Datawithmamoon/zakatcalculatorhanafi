@@ -254,10 +254,10 @@ export function ResultsView({
         )}
         <div className="grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
           <p>
-            {t.labels.silverNisab}: <Money value={r.silverNisab} /> ({config.nisabSilverGrams} g)
+            {t.labels.silverNisab}: <Money value={r.silverNisab} />
           </p>
           <p>
-            {t.labels.goldNisab}: <Money value={r.goldNisab} /> ({config.nisabGoldGrams} g)
+            {t.labels.goldNisab}: <Money value={r.goldNisab} />
           </p>
         </div>
         <p className="flex gap-2 rounded-lg bg-muted p-3 text-sm text-muted-foreground">

@@ -111,11 +111,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+// Applies saved language/direction/theme before first paint to avoid an LTR
+// flash for Urdu readers (and a light flash in dark mode).
+const PREFS_BOOTSTRAP = `(function(){try{var s=localStorage.getItem("hanafi-zakat-state-v1");if(!s)return;var p=(JSON.parse(s)||{}).prefs||{};var e=document.documentElement;if(p.lang){e.lang=p.lang;e.dir=p.lang==="ur"?"rtl":"ltr";}if(p.dark)e.classList.add("dark");if(p.highContrast)e.classList.add("hc");}catch(_){}})();`;
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" dir="ltr">
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: PREFS_BOOTSTRAP }} />
       </head>
       <body>
         {children}

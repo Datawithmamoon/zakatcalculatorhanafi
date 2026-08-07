@@ -3,25 +3,50 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 /**
- * Grants the caller the admin role, but only while no admin exists yet.
- * This bootstraps the very first administrator of the installation.
+ * Bootstraps the very first administrator.
+ *
+ * Security: the claim is NOT first-come-first-served. The caller must present
+ * the one-time setup token (server secret ADMIN_SETUP_TOKEN), or sign in with
+ * the pre-configured owner email (ADMIN_OWNER_EMAIL), so a random visitor who
+ * finds the deployment before the owner cannot seize permanent control.
  */
 export const claimFirstAdmin = createServerFn({ method: "POST" })
+  .inputValidator((data) => z.object({ token: z.string().max(200).optional() }).parse(data ?? {}))
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
+  .handler(async ({ context, data }) => {
+    const setupToken = process.env["ADMIN_SETUP_TOKEN"] ?? "";
+    const ownerEmail = (process.env["ADMIN_OWNER_EMAIL"] ?? "").trim().toLowerCase();
+    const callerEmail = String(
+      (context.claims as { email?: string } | undefined)?.email ?? "",
+    )
+      .trim()
+      .toLowerCase();
+
+    const supplied = (data.token ?? "").trim();
+    const tokenOk =
+      setupToken.length > 0 &&
+      supplied.length === setupToken.length &&
+      // constant-time-ish compare
+      supplied.split("").reduce((acc, ch, i) => acc | (ch.charCodeAt(0) ^ setupToken.charCodeAt(i)), 0) === 0;
+    const ownerOk = ownerEmail.length > 0 && callerEmail === ownerEmail;
+
+    if (!tokenOk && !ownerOk) {
+      return { granted: false as const, reason: "unauthorized" as const };
+    }
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { count, error } = await supabaseAdmin
       .from("user_roles")
       .select("id", { count: "exact", head: true })
       .eq("role", "admin");
     if (error) throw error;
-    if ((count ?? 0) > 0) return { granted: false as const, reason: "admin_exists" };
+    if ((count ?? 0) > 0) return { granted: false as const, reason: "admin_exists" as const };
 
     const { error: insertError } = await supabaseAdmin
       .from("user_roles")
       .insert({ user_id: context.userId, role: "admin" });
     if (insertError) throw insertError;
-    return { granted: true as const };
+    return { granted: true as const, reason: null };
   });
 
 /** Admin-only: list accounts and their roles. */

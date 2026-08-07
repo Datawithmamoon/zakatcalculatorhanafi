@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Ban, RotateCcw } from "lucide-react";
 import type { StepKey } from "@/lib/zakat/i18n";
 import { PRESETS, presetById, type PresetId } from "@/lib/zakat/presets";
@@ -20,7 +20,7 @@ const MONEY_GROUPS: Partial<Record<StepKey, MoneyGroup>> = {
 };
 
 export function Wizard() {
-  const { t, lang, input, update, setMoney, reset } = useZakat();
+  const { t, lang, input, update, setMoney, reset, config } = useZakat();
   const [index, setIndex] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [presetId, setPresetId] = useState<PresetId>("full");
@@ -29,10 +29,16 @@ export function Wizard() {
   const stepKey = (steps[index] ?? steps[0]) as StepKey;
   const copy = t.steps[stepKey];
   const group = MONEY_GROUPS[stepKey];
-  const result = useMemo(() => calculateZakat(input), [input]);
+  const result = useMemo(() => calculateZakat(input, config), [input, config]);
 
   const blockedByHawl = stepKey === "hawl" && !input.hawlCompleted;
   const isLast = index === steps.length - 1;
+
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  // Move keyboard focus to the new step so screen readers announce it.
+  useEffect(() => {
+    if (!showResults) headingRef.current?.focus();
+  }, [index, showResults, presetId]);
 
   const goNext = () => (isLast ? setShowResults(true) : setIndex((i) => i + 1));
   const goBack = () => setIndex((i) => Math.max(0, i - 1));
@@ -83,13 +89,28 @@ export function Wizard() {
           </span>
           <span>{Math.round(((index + 1) / steps.length) * 100)}%</span>
         </div>
-        <Progress value={((index + 1) / steps.length) * 100} className="h-1.5" />
+        <Progress
+          value={((index + 1) / steps.length) * 100}
+          className="h-1.5"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={steps.length}
+          aria-valuenow={index + 1}
+          aria-valuetext={`${t.step} ${index + 1} ${t.of} ${steps.length}`}
+          aria-label={t.step}
+        />
       </div>
 
 
-      <section className="rounded-2xl border bg-card p-5 shadow-soft sm:p-7">
+      <section aria-live="polite" className="rounded-2xl border bg-card p-5 shadow-soft sm:p-7">
         <header className="mb-5">
-          <h2 className="text-2xl font-semibold tracking-tight">{copy.title}</h2>
+          <h2
+            ref={headingRef}
+            tabIndex={-1}
+            className="text-2xl font-semibold tracking-tight outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            {copy.title}
+          </h2>
           <p className="mt-1 text-sm text-muted-foreground">{copy.intro}</p>
         </header>
 
@@ -183,14 +204,14 @@ export function Wizard() {
       </section>
 
       <nav className="no-print flex flex-wrap items-center justify-between gap-3">
-        <Button variant="outline" onClick={goBack} disabled={index === 0}>
+        <Button variant="outline" className="min-h-11" onClick={goBack} disabled={index === 0}>
           <ArrowLeft className="size-4 rtl:rotate-180" aria-hidden /> {t.back}
         </Button>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" onClick={reset}>
+          <Button variant="ghost" className="min-h-11" onClick={reset}>
             <RotateCcw className="size-4" aria-hidden /> {t.reset}
           </Button>
-          <Button onClick={goNext} disabled={blockedByHawl}>
+          <Button className="min-h-11" onClick={goNext} disabled={blockedByHawl}>
             {isLast ? t.calculate : t.next}
             <ArrowRight className="size-4 rtl:rotate-180" aria-hidden />
           </Button>

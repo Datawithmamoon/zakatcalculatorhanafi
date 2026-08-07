@@ -12,10 +12,13 @@ import { ChoiceButton, Money, MoneyInput, NumberInput } from "./bits";
 import { Label } from "@/components/ui/label";
 
 export function MetalStep({ metal }: { metal: "gold" | "silver" }) {
-  const { t, input, update } = useZakat();
+  const { t, input, update, settings } = useZakat();
   const holding = input[metal];
   const set = (patch: Partial<MetalHolding>) => update({ [metal]: { ...holding, ...patch } });
-  const referencePrice = metal === "gold" ? DEFAULT_GOLD_PRICE : DEFAULT_SILVER_PRICE;
+  const referencePrice =
+    metal === "gold"
+      ? Number(settings?.gold_price_per_gram) || DEFAULT_GOLD_PRICE
+      : Number(settings?.silver_price_per_gram) || DEFAULT_SILVER_PRICE;
   const purities = Object.keys(PURITY_FACTOR) as GoldPurity[];
 
   return (

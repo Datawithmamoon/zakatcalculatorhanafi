@@ -8,15 +8,17 @@ import {
   type MetalHolding,
 } from "@/lib/zakat/engine";
 import { useZakat } from "./context";
-import { ChoiceButton, Money, MoneyInput } from "./bits";
-import { Input } from "@/components/ui/input";
+import { ChoiceButton, Money, MoneyInput, NumberInput } from "./bits";
 import { Label } from "@/components/ui/label";
 
 export function MetalStep({ metal }: { metal: "gold" | "silver" }) {
-  const { t, input, update } = useZakat();
+  const { t, input, update, settings } = useZakat();
   const holding = input[metal];
   const set = (patch: Partial<MetalHolding>) => update({ [metal]: { ...holding, ...patch } });
-  const referencePrice = metal === "gold" ? DEFAULT_GOLD_PRICE : DEFAULT_SILVER_PRICE;
+  const referencePrice =
+    metal === "gold"
+      ? Number(settings?.gold_price_per_gram) || DEFAULT_GOLD_PRICE
+      : Number(settings?.silver_price_per_gram) || DEFAULT_SILVER_PRICE;
   const purities = Object.keys(PURITY_FACTOR) as GoldPurity[];
 
   return (
@@ -38,21 +40,13 @@ export function MetalStep({ metal }: { metal: "gold" | "silver" }) {
       {holding.owns && (
         <div className="space-y-5 rounded-xl border bg-card p-4 shadow-soft">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
-              <Label htmlFor={`${metal}-weight`}>{t.labels.weight}</Label>
-              <Input
-                id={`${metal}-weight`}
-                type="number"
-                min={0}
-                step="any"
-                dir="ltr"
-                inputMode="decimal"
-                value={holding.weight ? String(holding.weight) : ""}
-                placeholder="0"
-                onChange={(e) => set({ weight: Math.max(0, Number(e.target.value) || 0) })}
-                className="text-end tabular-nums"
-              />
-            </div>
+            <NumberInput
+              id={`${metal}-weight`}
+              label={t.labels.weight}
+              value={holding.weight}
+              onChange={(v) => set({ weight: v })}
+              suffix={holding.unit === "tola" ? "tola" : "g"}
+            />
             <div className="space-y-1.5">
               <Label>{t.labels.unit}</Label>
               <div className="flex gap-2">

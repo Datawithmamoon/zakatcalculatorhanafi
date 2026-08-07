@@ -14,6 +14,8 @@ import { MembersTab } from "@/components/admin/MembersTab";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toaster } from "@/components/ui/sonner";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const title = "Admin Panel — Hanafi Zakat Calculator";
 const description =
@@ -37,6 +39,7 @@ function AdminPage() {
   const claim = useServerFn(claimFirstAdmin);
   const navigate = useNavigate();
   const [claiming, setClaiming] = useState(false);
+  const [setupToken, setSetupToken] = useState("");
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -46,12 +49,14 @@ function AdminPage() {
   const claimAdmin = async () => {
     setClaiming(true);
     try {
-      const res = await claim();
+      const res = await claim({ data: { token: setupToken } });
       if (res.granted) {
         toast.success("You are now the administrator");
         await refetchRoles();
-      } else {
+      } else if (res.reason === "admin_exists") {
         toast.error("An administrator already exists. Ask them for access.");
+      } else {
+        toast.error("Invalid setup token.");
       }
     } catch {
       toast.error("Could not claim admin access");
@@ -90,9 +95,23 @@ function AdminPage() {
             <h2 className="text-lg font-semibold">Administrator access required</h2>
             <p className="text-sm text-muted-foreground">
               Your account does not have the admin role yet. If this installation has no
-              administrator, you can claim it now.
+              administrator, enter the one-time setup token (stored as the
+              <code className="mx-1 rounded bg-muted px-1">ADMIN_SETUP_TOKEN</code> secret in your
+              backend settings) to claim it.
             </p>
-            <Button onClick={claimAdmin} disabled={claiming}>
+            <div className="mx-auto max-w-sm space-y-2 text-start">
+              <Label htmlFor="setup-token">Setup token</Label>
+              <Input
+                id="setup-token"
+                type="password"
+                autoComplete="off"
+                value={setupToken}
+                onChange={(e) => setSetupToken(e.target.value)}
+                placeholder="Paste ADMIN_SETUP_TOKEN"
+                className="min-h-11"
+              />
+            </div>
+            <Button className="min-h-11" onClick={claimAdmin} disabled={claiming || !setupToken.trim()}>
               Claim admin access
             </Button>
           </div>

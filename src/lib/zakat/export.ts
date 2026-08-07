@@ -41,12 +41,17 @@ export function toCsv(payload: ExportPayload): string {
     ["Business assets", Math.round(result.businessTotal)],
     ["Investments", Math.round(result.investmentsTotal)],
     ["Receivables (zakatable)", Math.round(result.receivablesTotal)],
+    ["Receivables (uncertain, excluded until received)", Math.round(result.receivablesUncertain)],
+    ["Receivables (bad debt, excluded)", Math.round(result.receivablesBad)],
     ["Total assets", Math.round(result.totalAssets)],
     ["Liabilities", Math.round(result.liabilitiesTotal)],
     ["Net wealth", Math.round(result.netWealth)],
     ["Nisab threshold", Math.round(result.nisab)],
     ["Above Nisab", result.aboveNisab ? "yes" : "no"],
-    ["Zakat due (2.5%)", Math.round(result.zakatDue)],
+    [
+      `Zakat due (${((result.config?.zakatRate ?? 0.025) * 100).toFixed(2)}%)`,
+      Math.round(result.zakatDue),
+    ],
   ];
 
   return ["Item,Value", ...rows.map(([k, v]) => `${escapeCsv(k)},${escapeCsv(v)}`)].join("\n");

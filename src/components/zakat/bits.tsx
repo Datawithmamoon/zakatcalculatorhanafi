@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { BookOpen, CircleAlert, CircleCheck, CircleX, Scale } from "lucide-react";
 import type { Edu } from "@/lib/zakat/i18n";
+import { parseAmount } from "@/lib/zakat/engine";
 import { useZakat } from "./context";
 import {
   Accordion,
@@ -53,7 +55,32 @@ export function MoneyInput({
   value: number;
   onChange: (v: number) => void;
 }) {
-  const { t } = useZakat();
+  const { t, lang } = useZakat();
+  const [text, setText] = useState(value ? String(value) : "");
+  const [error, setError] = useState<"invalid" | "negative" | null>(null);
+
+  // Keep in sync when the value changes elsewhere (reset, autofill, presets).
+  useEffect(() => {
+    setText((prev) => {
+      const parsed = parseAmount(prev);
+      if (parsed.error === null && parsed.value === value) return prev;
+      return value ? String(value) : "";
+    });
+  }, [value]);
+
+  const message =
+    error === "invalid"
+      ? lang === "ur"
+        ? "صرف اعداد درج کریں (مثلاً 12500 یا 1250.50)۔"
+        : "Enter numbers only (e.g. 12500 or 1250.50)."
+      : error === "negative"
+        ? lang === "ur"
+          ? "منفی رقم درج نہیں کی جا سکتی۔"
+          : "Amount cannot be negative."
+        : null;
+
+  const errorId = `${id}-error`;
+
   return (
     <div className="space-y-1.5">
       <Label htmlFor={id} className="text-sm font-medium">
@@ -66,16 +93,34 @@ export function MoneyInput({
         <Input
           id={id}
           inputMode="decimal"
-          type="number"
-          min={0}
-          step="any"
+          type="text"
+          autoComplete="off"
           dir="ltr"
-          value={value ? String(value) : ""}
+          value={text}
           placeholder="0"
-          onChange={(e) => onChange(Math.max(0, Number(e.target.value) || 0))}
-          className="ps-14 text-end tabular-nums"
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? errorId : undefined}
+          onChange={(e) => {
+            const raw = e.target.value;
+            setText(raw);
+            const parsed = parseAmount(raw);
+            setError(parsed.error);
+            if (!parsed.error) onChange(parsed.value);
+          }}
+          onBlur={() => {
+            if (!error) setText(value ? String(value) : "");
+          }}
+          className={cn(
+            "ps-14 text-end tabular-nums min-h-11",
+            error && "border-destructive focus-visible:ring-destructive/40",
+          )}
         />
       </div>
+      {message && (
+        <p id={errorId} role="alert" className="text-xs font-medium text-destructive">
+          {message}
+        </p>
+      )}
     </div>
   );
 }
@@ -104,7 +149,7 @@ export function ChoiceButton({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "rounded-lg border px-4 py-2 text-sm font-medium transition-colors",
+        "min-h-11 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors",
         active
           ? "border-primary bg-primary text-primary-foreground shadow-soft"
           : "border-border bg-card hover:bg-accent hover:text-accent-foreground",

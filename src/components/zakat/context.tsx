@@ -5,6 +5,8 @@ import {
   DEFAULT_GOLD_PRICE,
   DEFAULT_SILVER_PRICE,
   type ZakatInput,
+  type ZakatConfig,
+  DEFAULT_CONFIG,
 } from "@/lib/zakat/engine";
 import { useSettings, type AppSettings } from "@/lib/settings";
 
@@ -30,6 +32,8 @@ interface Ctx {
   reset: () => void;
   hydrated: boolean;
   settings: AppSettings | null;
+  /** Admin-managed Nisab weights and Zakat rate. */
+  config: ZakatConfig;
 }
 
 const ZakatContext = createContext<Ctx | null>(null);
@@ -93,6 +97,19 @@ export function ZakatProvider({ children }: { children: ReactNode }) {
     }));
   }, [settings, hydrated]);
 
+  const config = useMemo<ZakatConfig>(
+    () =>
+      settings
+        ? {
+            nisabGoldGrams: Number(settings.nisab_gold_grams) || DEFAULT_CONFIG.nisabGoldGrams,
+            nisabSilverGrams:
+              Number(settings.nisab_silver_grams) || DEFAULT_CONFIG.nisabSilverGrams,
+            zakatRate: Number(settings.zakat_rate) || DEFAULT_CONFIG.zakatRate,
+          }
+        : DEFAULT_CONFIG,
+    [settings],
+  );
+
   const value = useMemo<Ctx>(
     () => ({
       t: settings
@@ -107,12 +124,13 @@ export function ZakatProvider({ children }: { children: ReactNode }) {
       input,
       hydrated,
       settings: settings ?? null,
+      config,
       update: (patch) => setInput((prev) => ({ ...prev, ...patch })),
       setMoney: (group, key, v) =>
         setInput((prev) => ({ ...prev, [group]: { ...prev[group], [key]: v } })),
       reset: () => setInput(defaultInput()),
     }),
-    [lang, dark, highContrast, input, hydrated, settings],
+    [lang, dark, highContrast, input, hydrated, settings, config],
   );
 
   return <ZakatContext.Provider value={value}>{children}</ZakatContext.Provider>;

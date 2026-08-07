@@ -125,6 +125,86 @@ export function MoneyInput({
   );
 }
 
+/** Plain numeric field (weights, counts) with the same strict validation. */
+export function NumberInput({
+  id,
+  label,
+  value,
+  onChange,
+  suffix,
+}: {
+  id: string;
+  label: string;
+  value: number;
+  onChange: (v: number) => void;
+  suffix?: string;
+}) {
+  const { lang } = useZakat();
+  const [text, setText] = useState(value ? String(value) : "");
+  const [error, setError] = useState<"invalid" | "negative" | null>(null);
+
+  useEffect(() => {
+    setText((prev) => {
+      const parsed = parseAmount(prev);
+      if (parsed.error === null && parsed.value === value) return prev;
+      return value ? String(value) : "";
+    });
+  }, [value]);
+
+  const message =
+    error === "invalid"
+      ? lang === "ur"
+        ? "صرف اعداد درج کریں۔"
+        : "Enter numbers only."
+      : error === "negative"
+        ? lang === "ur"
+          ? "منفی مقدار درج نہیں کی جا سکتی۔"
+          : "Value cannot be negative."
+        : null;
+  const errorId = `${id}-error`;
+
+  return (
+    <div className="space-y-1.5">
+      <Label htmlFor={id}>{label}</Label>
+      <div className="relative">
+        <Input
+          id={id}
+          type="text"
+          inputMode="decimal"
+          autoComplete="off"
+          dir="ltr"
+          value={text}
+          placeholder="0"
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? errorId : undefined}
+          onChange={(e) => {
+            const raw = e.target.value;
+            setText(raw);
+            const parsed = parseAmount(raw);
+            setError(parsed.error);
+            if (!parsed.error) onChange(parsed.value);
+          }}
+          className={cn(
+            "min-h-11 text-end tabular-nums",
+            suffix && "pe-12",
+            error && "border-destructive focus-visible:ring-destructive/40",
+          )}
+        />
+        {suffix && (
+          <span className="pointer-events-none absolute inset-y-0 end-3 flex items-center text-xs text-muted-foreground">
+            {suffix}
+          </span>
+        )}
+      </div>
+      {message && (
+        <p id={errorId} role="alert" className="text-xs font-medium text-destructive">
+          {message}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export function Money({ value, className }: { value: number; className?: string }) {
   const { t, lang } = useZakat();
   return (

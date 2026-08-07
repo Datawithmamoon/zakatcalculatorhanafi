@@ -60,6 +60,9 @@ export interface ZakatResult {
   businessTotal: number;
   investmentsTotal: number;
   receivablesTotal: number;
+  receivablesUncertain: number;
+  receivablesBad: number;
+  config?: ZakatConfig;
   totalAssets: number;
   liabilitiesTotal: number;
   netWealth: number;

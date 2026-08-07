@@ -137,13 +137,15 @@ export const sum = (record: Record<string, number> | undefined): number =>
 export const zakatableReceivables = (r: ReceivablesInput): number => num(r?.likely);
 
 /** Silver is the Hanafi default basis for cash and mixed wealth (more beneficial to the poor). */
-export const nisabValue = (input: ZakatInput): number => {
+export const nisabValue = (input: ZakatInput, config?: Partial<ZakatConfig>): number => {
+  const c = resolveConfig(config);
   if (input.nisabBasis === "manual") return num(input.manualNisab);
-  if (input.nisabBasis === "gold") return NISAB_GOLD_GRAMS * num(input.gold.pricePerGram);
-  return NISAB_SILVER_GRAMS * num(input.silver.pricePerGram);
+  if (input.nisabBasis === "gold") return c.nisabGoldGrams * num(input.gold.pricePerGram);
+  return c.nisabSilverGrams * num(input.silver.pricePerGram);
 };
 
-export function calculateZakat(input: ZakatInput): ZakatResult {
+export function calculateZakat(input: ZakatInput, config?: Partial<ZakatConfig>): ZakatResult {
+  const c = resolveConfig(config);
   const goldValue = metalValue(input.gold);
   const silverValue = metalValue(input.silver);
   const cashTotal = sum(input.cash);
@@ -157,12 +159,12 @@ export function calculateZakat(input: ZakatInput): ZakatResult {
 
   const netWealth = Math.max(0, totalAssets - liabilitiesTotal);
 
-  const goldNisab = NISAB_GOLD_GRAMS * num(input.gold.pricePerGram);
-  const silverNisab = NISAB_SILVER_GRAMS * num(input.silver.pricePerGram);
-  const nisab = nisabValue(input);
+  const goldNisab = c.nisabGoldGrams * num(input.gold.pricePerGram);
+  const silverNisab = c.nisabSilverGrams * num(input.silver.pricePerGram);
+  const nisab = nisabValue(input, c);
 
   const aboveNisab = input.hawlCompleted && nisab > 0 && netWealth >= nisab;
-  const zakatDue = aboveNisab ? Math.round(netWealth * ZAKAT_RATE) : 0;
+  const zakatDue = aboveNisab ? Math.round(netWealth * c.zakatRate) : 0;
 
   return {
     goldValue,
@@ -171,6 +173,8 @@ export function calculateZakat(input: ZakatInput): ZakatResult {
     businessTotal,
     investmentsTotal,
     receivablesTotal,
+    receivablesUncertain: num(input.receivables?.uncertain),
+    receivablesBad: num(input.receivables?.bad),
     totalAssets,
     liabilitiesTotal,
     netWealth,
@@ -180,6 +184,7 @@ export function calculateZakat(input: ZakatInput): ZakatResult {
     aboveNisab,
     zakatDue,
     hawlCompleted: input.hawlCompleted,
+    config: c,
   };
 }
 

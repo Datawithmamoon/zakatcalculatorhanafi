@@ -214,12 +214,16 @@ export function calculateZakat(input: ZakatInput, config?: Partial<ZakatConfig>)
   };
 }
 
-export const emptyMetal = (pricePerGram: number): MetalHolding => ({
+export const emptyMetal = (
+  pricePerGram: number,
+  purity: MetalPurity = "24K",
+): MetalHolding => ({
   owns: false,
   weight: 0,
   unit: "gram",
-  purity: "24K",
+  purity,
   pricePerGram,
+  priceEdited: false,
 });
 
 /** Editable reference prices (PKR per gram of pure metal). */
@@ -229,7 +233,7 @@ export const DEFAULT_SILVER_PRICE = 360;
 export const defaultInput = (): ZakatInput => ({
   hawlCompleted: true,
   gold: emptyMetal(DEFAULT_GOLD_PRICE),
-  silver: emptyMetal(DEFAULT_SILVER_PRICE),
+  silver: emptyMetal(DEFAULT_SILVER_PRICE, "999"),
   cash: {},
   business: {},
   investments: {},

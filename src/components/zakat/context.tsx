@@ -2,8 +2,6 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import { dictionaries, type Dict, type Lang } from "@/lib/zakat/i18n";
 import {
   defaultInput,
-  DEFAULT_GOLD_PRICE,
-  DEFAULT_SILVER_PRICE,
   type ZakatInput,
   type ZakatConfig,
   DEFAULT_CONFIG,

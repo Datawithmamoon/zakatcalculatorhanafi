@@ -81,7 +81,9 @@ export function ResultsView({
   const exportPdf = () =>
     withToast(() => saveBlob(`zakat-${fileStamp()}.pdf`, pdfBlob()), "PDF");
 
-  const doPrint = () => printOrFallback(() => saveBlob(`zakat-${fileStamp()}.pdf`, pdfBlob()));
+  const doPrint = () => printOrFallback(async () => {
+      await saveBlob(`zakat-${fileStamp()}.pdf`, pdfBlob());
+    });
 
   const rows: Array<[string, number]> = [
     [t.results.gold ?? "", r.goldValue],

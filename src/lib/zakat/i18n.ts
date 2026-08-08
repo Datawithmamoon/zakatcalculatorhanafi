@@ -38,6 +38,14 @@ export type LabelKey =
   | "silver"
   | "gold"
   | "theme"
+  | "kilogram"
+  | "converted"
+  | "livePrices"
+  | "updated"
+  | "refreshPrices"
+  | "liveFailed"
+  | "liveCached"
+  | "liveLoading"
   | "language";
 
 export type StepKey =

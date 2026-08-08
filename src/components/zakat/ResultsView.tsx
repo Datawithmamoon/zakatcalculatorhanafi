@@ -12,7 +12,8 @@ import {
   Sheet,
 } from "lucide-react";
 import { calculateZakat } from "@/lib/zakat/engine";
-import { buildPayload, toCsv, downloadFile, fileStamp } from "@/lib/zakat/export";
+import { buildPayload, toCsv, fileStamp } from "@/lib/zakat/export";
+import { saveBlob, shareContent, printOrFallback } from "@/lib/platform";
 import { generateZakatPdf } from "@/lib/zakat/pdf";
 import type { PresetId } from "@/lib/zakat/presets";
 import { useZakat } from "./context";
@@ -40,31 +41,47 @@ export function ResultsView({
       priceSource: settings?.price_source ?? "manual",
     });
 
-  const exportJson = () => {
-    downloadFile(
-      `zakat-${fileStamp()}.json`,
-      JSON.stringify(payload(), null, 2),
-      "application/json",
-    );
-    toast.success("JSON downloaded");
-  };
-
-  const exportCsv = () => {
-    downloadFile(`zakat-${fileStamp()}.csv`, toCsv(payload()), "text/csv;charset=utf-8");
-    toast.success("CSV downloaded");
-  };
-
-
-  const exportPdf = () => {
-    const doc = generateZakatPdf(r, {
+  const pdfBlob = () =>
+    generateZakatPdf(r, {
       currency: t.currency,
       preset: presetId ?? "custom",
       priceSource: settings?.price_source ?? "manual",
       appName: "Hanafi Zakat Calculator",
-    });
-    doc.save(`zakat-${fileStamp()}.pdf`);
-    toast.success("PDF downloaded");
+    }).output("blob") as Blob;
+
+  const withToast = async (fn: () => Promise<unknown>, ok: string) => {
+    try {
+      await fn();
+      toast.success(ok);
+    } catch {
+      toast.error(lang === "ur" ? "فائل محفوظ نہیں ہو سکی۔" : "Could not save the file.");
+    }
   };
+
+  const exportJson = () =>
+    withToast(
+      () =>
+        saveBlob(
+          `zakat-${fileStamp()}.json`,
+          new Blob([JSON.stringify(payload(), null, 2)], { type: "application/json" }),
+        ),
+      "JSON",
+    );
+
+  const exportCsv = () =>
+    withToast(
+      () =>
+        saveBlob(
+          `zakat-${fileStamp()}.csv`,
+          new Blob(["\uFEFF", toCsv(payload())], { type: "text/csv;charset=utf-8" }),
+        ),
+      "CSV",
+    );
+
+  const exportPdf = () =>
+    withToast(() => saveBlob(`zakat-${fileStamp()}.pdf`, pdfBlob()), "PDF");
+
+  const doPrint = () => printOrFallback(() => saveBlob(`zakat-${fileStamp()}.pdf`, pdfBlob()));
 
   const rows: Array<[string, number]> = [
     [t.results.gold ?? "", r.goldValue],
@@ -77,15 +94,12 @@ export function ResultsView({
 
   const share = async () => {
     const text = `${t.results.zakatDue}: ${t.currency} ${Math.round(r.zakatDue).toLocaleString("en-US")}`;
-    try {
-      if (navigator.share) await navigator.share({ title: t.appName, text });
-      else {
-        await navigator.clipboard.writeText(text);
-        toast.success(text);
-      }
-    } catch {
-      /* user cancelled */
-    }
+    const outcome = await shareContent({
+      title: t.appName,
+      text,
+      file: { filename: `zakat-${fileStamp()}.pdf`, blob: pdfBlob() },
+    });
+    if (outcome === "copied") toast.success(lang === "ur" ? "کاپی ہو گیا" : "Copied to clipboard");
   };
 
   return (
@@ -269,7 +283,7 @@ export function ResultsView({
       </section>
 
       <div className="no-print flex flex-wrap gap-3">
-        <Button className="min-h-11" onClick={() => window.print()}>
+        <Button className="min-h-11" onClick={doPrint}>
           <Printer className="size-4" aria-hidden /> {t.results.print}
         </Button>
         <Button className="min-h-11" variant="secondary" onClick={exportPdf}>

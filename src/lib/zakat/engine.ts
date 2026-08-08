@@ -91,12 +91,18 @@ export interface ZakatResult {
   hawlCompleted: boolean;
 }
 
-export const toGrams = (weight: number, unit: MetalUnit): number =>
-  unit === "tola" ? weight * TOLA_IN_GRAMS : weight;
+export const UNIT_IN_GRAMS: Record<MetalUnit, number> = {
+  gram: 1,
+  tola: TOLA_IN_GRAMS,
+  kilogram: 1000,
+};
 
-/** Pure-metal equivalent grams after applying karat purity. */
+export const toGrams = (weight: number, unit: MetalUnit): number =>
+  num(weight) * (UNIT_IN_GRAMS[unit] ?? 1);
+
+/** Pure-metal equivalent grams after applying purity (karat or millesimal fineness). */
 export const pureGrams = (h: MetalHolding): number =>
-  toGrams(num(h.weight), h.unit) * PURITY_FACTOR[h.purity];
+  toGrams(num(h.weight), h.unit) * (PURITY_FACTOR[h.purity] ?? 1);
 
 /** Market value of a metal holding. */
 export const metalValue = (h: MetalHolding): number =>

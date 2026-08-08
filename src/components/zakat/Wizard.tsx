@@ -1,11 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Ban, RotateCcw } from "lucide-react";
 import type { StepKey } from "@/lib/zakat/i18n";
 import { presetById, type PresetId } from "@/lib/zakat/presets";
 import { useZakat } from "./context";
 import { ChoiceButton, EduPanel, Money, MoneyInput } from "./bits";
 import { MetalStep } from "./MetalStep";
-import { ResultsView } from "./ResultsView";
+// Results (with the PDF generator) load only when the user finishes the wizard.
+const ResultsView = lazy(() =>
+  import("./ResultsView").then((m) => ({ default: m.ResultsView })),
+);
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { sum, calculateZakat } from "@/lib/zakat/engine";
@@ -46,15 +49,21 @@ export function Wizard() {
 
   if (showResults) {
     return (
-      <ResultsView
-        presetId={presetId}
-        onEdit={() => setShowResults(false)}
-        onReset={() => {
-          reset();
-          setIndex(0);
-          setShowResults(false);
-        }}
-      />
+      <Suspense
+        fallback={
+          <div className="h-64 animate-pulse rounded-2xl border bg-card" aria-busy="true" />
+        }
+      >
+        <ResultsView
+          presetId={presetId}
+          onEdit={() => setShowResults(false)}
+          onReset={() => {
+            reset();
+            setIndex(0);
+            setShowResults(false);
+          }}
+        />
+      </Suspense>
     );
   }
 

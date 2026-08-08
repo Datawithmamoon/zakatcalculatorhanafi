@@ -13,24 +13,41 @@ export const NISAB_SILVER_GRAMS = 612.36;
 
 export const ZAKAT_RATE = 0.025; // 1/40
 
-export type MetalUnit = "gram" | "tola";
-export type GoldPurity = "24K" | "22K" | "21K" | "18K";
+export type MetalUnit = "gram" | "tola" | "kilogram";
+export type GoldPurity = "24K" | "22K" | "21K" | "18K" | "14K";
+/** Silver fineness is expressed in millesimal parts per 1000, never in karat. */
+export type SilverPurity = "999" | "958" | "925" | "900" | "800";
+export type MetalPurity = GoldPurity | SilverPurity;
 
-/** Purity factor relative to pure (24K) metal. */
-export const PURITY_FACTOR: Record<GoldPurity, number> = {
+export const GOLD_PURITIES: GoldPurity[] = ["24K", "22K", "21K", "18K", "14K"];
+export const SILVER_PURITIES: SilverPurity[] = ["999", "958", "925", "900", "800"];
+
+/** Purity factor relative to pure metal (24K gold / 999 fine silver). */
+export const PURITY_FACTOR: Record<MetalPurity, number> = {
   "24K": 1,
   "22K": 22 / 24,
   "21K": 21 / 24,
   "18K": 18 / 24,
+  "14K": 14 / 24,
+  "999": 0.999,
+  "958": 0.958,
+  "925": 0.925,
+  "900": 0.9,
+  "800": 0.8,
 };
+
+export const puritiesFor = (metal: "gold" | "silver"): MetalPurity[] =>
+  metal === "gold" ? GOLD_PURITIES : SILVER_PURITIES;
 
 export interface MetalHolding {
   owns: boolean;
   weight: number;
   unit: MetalUnit;
-  purity: GoldPurity;
-  /** Price of one gram of PURE (24K) metal in the reporting currency. */
+  purity: MetalPurity;
+  /** Price of one gram of PURE metal in the reporting currency. */
   pricePerGram: number;
+  /** True once the user typed their own price, so live prices stop overwriting it. */
+  priceEdited?: boolean;
 }
 
 export interface ReceivablesInput {
@@ -74,12 +91,18 @@ export interface ZakatResult {
   hawlCompleted: boolean;
 }
 
-export const toGrams = (weight: number, unit: MetalUnit): number =>
-  unit === "tola" ? weight * TOLA_IN_GRAMS : weight;
+export const UNIT_IN_GRAMS: Record<MetalUnit, number> = {
+  gram: 1,
+  tola: TOLA_IN_GRAMS,
+  kilogram: 1000,
+};
 
-/** Pure-metal equivalent grams after applying karat purity. */
+export const toGrams = (weight: number, unit: MetalUnit): number =>
+  num(weight) * (UNIT_IN_GRAMS[unit] ?? 1);
+
+/** Pure-metal equivalent grams after applying purity (karat or millesimal fineness). */
 export const pureGrams = (h: MetalHolding): number =>
-  toGrams(num(h.weight), h.unit) * PURITY_FACTOR[h.purity];
+  toGrams(num(h.weight), h.unit) * (PURITY_FACTOR[h.purity] ?? 1);
 
 /** Market value of a metal holding. */
 export const metalValue = (h: MetalHolding): number =>
@@ -191,12 +214,16 @@ export function calculateZakat(input: ZakatInput, config?: Partial<ZakatConfig>)
   };
 }
 
-export const emptyMetal = (pricePerGram: number): MetalHolding => ({
+export const emptyMetal = (
+  pricePerGram: number,
+  purity: MetalPurity = "24K",
+): MetalHolding => ({
   owns: false,
   weight: 0,
   unit: "gram",
-  purity: "24K",
+  purity,
   pricePerGram,
+  priceEdited: false,
 });
 
 /** Editable reference prices (PKR per gram of pure metal). */
@@ -206,7 +233,7 @@ export const DEFAULT_SILVER_PRICE = 360;
 export const defaultInput = (): ZakatInput => ({
   hawlCompleted: true,
   gold: emptyMetal(DEFAULT_GOLD_PRICE),
-  silver: emptyMetal(DEFAULT_SILVER_PRICE),
+  silver: emptyMetal(DEFAULT_SILVER_PRICE, "999"),
   cash: {},
   business: {},
   investments: {},

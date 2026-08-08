@@ -19,6 +19,20 @@ describe("unit conversion", () => {
     expect(v).toBeCloseTo(2200);
   });
 
+  it("converts kilograms", () => {
+    expect(toGrams(1.5, "kilogram")).toBe(1500);
+  });
+
+  it("applies silver millesimal fineness, not karat", () => {
+    const v = metalValue({ owns: true, weight: 100, unit: "gram", purity: "925", pricePerGram: 10 });
+    expect(v).toBeCloseTo(925);
+  });
+
+  it("applies 14K purity", () => {
+    const v = metalValue({ owns: true, weight: 24, unit: "gram", purity: "14K", pricePerGram: 100 });
+    expect(v).toBeCloseTo(1400);
+  });
+
   it("returns 0 when not owned", () => {
     expect(
       metalValue({ owns: false, weight: 24, unit: "gram", purity: "24K", pricePerGram: 100 }),

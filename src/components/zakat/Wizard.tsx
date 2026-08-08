@@ -1,11 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Ban, RotateCcw } from "lucide-react";
 import type { StepKey } from "@/lib/zakat/i18n";
-import { PRESETS, presetById, type PresetId } from "@/lib/zakat/presets";
+import { presetById, type PresetId } from "@/lib/zakat/presets";
 import { useZakat } from "./context";
 import { ChoiceButton, EduPanel, Money, MoneyInput } from "./bits";
 import { MetalStep } from "./MetalStep";
-import { ResultsView } from "./ResultsView";
+// Results (with the PDF generator) load only when the user finishes the wizard.
+const ResultsView = lazy(() =>
+  import("./ResultsView").then((m) => ({ default: m.ResultsView })),
+);
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { sum, calculateZakat } from "@/lib/zakat/engine";
@@ -23,7 +26,8 @@ export function Wizard() {
   const { t, lang, input, update, setMoney, reset, config } = useZakat();
   const [index, setIndex] = useState(0);
   const [showResults, setShowResults] = useState(false);
-  const [presetId, setPresetId] = useState<PresetId>("full");
+  // Every user answers the complete questionnaire — no quick templates.
+  const presetId: PresetId = "full";
 
   const steps = useMemo(() => presetById(presetId).steps, [presetId]);
   const stepKey = (steps[index] ?? steps[0]) as StepKey;
@@ -45,43 +49,26 @@ export function Wizard() {
 
   if (showResults) {
     return (
-      <ResultsView
-        presetId={presetId}
-        onEdit={() => setShowResults(false)}
-        onReset={() => {
-          reset();
-          setIndex(0);
-          setShowResults(false);
-        }}
-      />
+      <Suspense
+        fallback={
+          <div className="h-64 animate-pulse rounded-2xl border bg-card" aria-busy="true" />
+        }
+      >
+        <ResultsView
+          presetId={presetId}
+          onEdit={() => setShowResults(false)}
+          onReset={() => {
+            reset();
+            setIndex(0);
+            setShowResults(false);
+          }}
+        />
+      </Suspense>
     );
   }
 
   return (
     <div className="space-y-6">
-      <div className="no-print space-y-3 rounded-2xl border bg-card p-4 shadow-soft">
-        <p className="text-sm font-semibold">
-          {lang === "ur" ? "تیز ٹیمپلیٹ منتخب کریں" : "Choose a quick template"}
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {PRESETS.map((p) => (
-            <ChoiceButton
-              key={p.id}
-              active={presetId === p.id}
-              onClick={() => {
-                setPresetId(p.id);
-                setIndex(0);
-              }}
-            >
-              {lang === "ur" ? p.labelUr : p.labelEn}
-            </ChoiceButton>
-          ))}
-        </div>
-        <p className="text-xs text-muted-foreground">
-          {lang === "ur" ? presetById(presetId).descUr : presetById(presetId).descEn}
-        </p>
-      </div>
-
       <div className="no-print space-y-2">
         <div className="flex items-center justify-between text-xs font-medium text-muted-foreground">
           <span>

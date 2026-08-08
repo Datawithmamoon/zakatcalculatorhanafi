@@ -38,6 +38,14 @@ export type LabelKey =
   | "silver"
   | "gold"
   | "theme"
+  | "kilogram"
+  | "converted"
+  | "livePrices"
+  | "updated"
+  | "refreshPrices"
+  | "liveFailed"
+  | "liveCached"
+  | "liveLoading"
   | "language";
 
 export type StepKey =
@@ -141,6 +149,14 @@ const en: Dict = {
     silver: "Silver",
     gold: "Gold",
     theme: "Theme",
+    kilogram: "Kilogram",
+    converted: "Converted",
+    livePrices: "Live market price",
+    updated: "Updated",
+    refreshPrices: "Refresh prices",
+    liveFailed: "Live prices unavailable. Enter the price manually.",
+    liveCached: "Live prices unavailable — showing the last saved price.",
+    liveLoading: "Fetching live prices…",
     language: "اردو",
   },
   steps: {
@@ -394,6 +410,14 @@ const ur: Dict = {
     silver: "چاندی",
     gold: "سونا",
     theme: "تھیم",
+    kilogram: "کلوگرام",
+    converted: "تبدیل شدہ",
+    livePrices: "مارکیٹ کی تازہ قیمت",
+    updated: "آخری اپ ڈیٹ",
+    refreshPrices: "قیمتیں تازہ کریں",
+    liveFailed: "تازہ قیمتیں دستیاب نہیں۔ براہِ کرم قیمت خود درج کریں۔",
+    liveCached: "تازہ قیمتیں دستیاب نہیں — آخری محفوظ قیمت دکھائی جا رہی ہے۔",
+    liveLoading: "تازہ قیمتیں حاصل کی جا رہی ہیں…",
     language: "English",
   },
   steps: {

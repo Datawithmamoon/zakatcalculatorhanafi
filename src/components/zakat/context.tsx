@@ -2,13 +2,12 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import { dictionaries, type Dict, type Lang } from "@/lib/zakat/i18n";
 import {
   defaultInput,
-  DEFAULT_GOLD_PRICE,
-  DEFAULT_SILVER_PRICE,
   type ZakatInput,
   type ZakatConfig,
   DEFAULT_CONFIG,
 } from "@/lib/zakat/engine";
 import { useSettings, type AppSettings } from "@/lib/settings";
+import { useLivePrices, type LivePriceState } from "@/lib/zakat/useLivePrices";
 
 const STORAGE_KEY = "hanafi-zakat-state-v1";
 
@@ -34,6 +33,8 @@ interface Ctx {
   settings: AppSettings | null;
   /** Admin-managed Nisab weights and Zakat rate. */
   config: ZakatConfig;
+  /** Live gold/silver spot prices with freshness and error state. */
+  live: LivePriceState;
 }
 
 const ZakatContext = createContext<Ctx | null>(null);
@@ -80,22 +81,33 @@ export function ZakatProvider({ children }: { children: ReactNode }) {
     root.dir = lang === "ur" ? "rtl" : "ltr";
   }, [dark, highContrast, lang]);
 
-  // Admin-managed prices: applied unless the user typed their own price.
+  // Admin-managed settings.
   const { data: settings } = useSettings();
+
+  // Live market prices (auto-refreshing, cached offline).
+  const live = useLivePrices({
+    currency: settings?.base_currency ?? "PKR",
+    autoRefresh: settings?.auto_refresh_enabled ?? true,
+    intervalMinutes: settings?.refresh_interval_minutes ?? 30,
+  });
+
+  // Prices flow: live market price > admin price > built-in default.
+  // A price the user typed themselves is never overwritten.
   useEffect(() => {
-    if (!settings || !hydrated) return;
-    setInput((prev) => ({
-      ...prev,
-      gold:
-        prev.gold.pricePerGram === DEFAULT_GOLD_PRICE
-          ? { ...prev.gold, pricePerGram: Number(settings.gold_price_per_gram) }
-          : prev.gold,
-      silver:
-        prev.silver.pricePerGram === DEFAULT_SILVER_PRICE
-          ? { ...prev.silver, pricePerGram: Number(settings.silver_price_per_gram) }
-          : prev.silver,
-    }));
-  }, [settings, hydrated]);
+    if (!hydrated) return;
+    const gold = live.goldPerGram ?? (settings ? Number(settings.gold_price_per_gram) : null);
+    const silver = live.silverPerGram ?? (settings ? Number(settings.silver_price_per_gram) : null);
+    setInput((prev) => {
+      const next = { ...prev };
+      if (!prev.gold.priceEdited && gold && gold > 0 && gold !== prev.gold.pricePerGram) {
+        next.gold = { ...prev.gold, pricePerGram: gold };
+      }
+      if (!prev.silver.priceEdited && silver && silver > 0 && silver !== prev.silver.pricePerGram) {
+        next.silver = { ...prev.silver, pricePerGram: silver };
+      }
+      return next;
+    });
+  }, [settings, hydrated, live.goldPerGram, live.silverPerGram]);
 
   const config = useMemo<ZakatConfig>(
     () =>
@@ -125,12 +137,13 @@ export function ZakatProvider({ children }: { children: ReactNode }) {
       hydrated,
       settings: settings ?? null,
       config,
+      live,
       update: (patch) => setInput((prev) => ({ ...prev, ...patch })),
       setMoney: (group, key, v) =>
         setInput((prev) => ({ ...prev, [group]: { ...prev[group], [key]: v } })),
       reset: () => setInput(defaultInput()),
     }),
-    [lang, dark, highContrast, input, hydrated, settings, config],
+    [lang, dark, highContrast, input, hydrated, settings, config, live],
   );
 
   return <ZakatContext.Provider value={value}>{children}</ZakatContext.Provider>;

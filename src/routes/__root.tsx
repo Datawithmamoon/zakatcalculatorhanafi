@@ -76,26 +76,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#0f5132" },
       { name: "author", content: "Hanafi Zakat Calculator" },
+      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
       { name: "google-site-verification", content: "uQNYxnpnkIgOO8jIgO5UY6v61PmsD4RD29NLFjLkN5g" },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Hanafi Zakat Calculator" },
+      { property: "og:locale", content: "en" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "Zakat calculator hanafi" },
-      { property: "og:title", content: "Zakat calculator hanafi" },
-      { name: "twitter:title", content: "Zakat calculator hanafi" },
+      { name: "apple-mobile-web-app-title", content: "Zakat" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { title: "Hanafi Zakat Calculator" },
+      { property: "og:title", content: "Hanafi Zakat Calculator" },
+      { name: "twitter:title", content: "Hanafi Zakat Calculator" },
       { name: "description", content: "An Islamic Zakat calculator for Muslims to accurately determine Zakat obligations based on Hanafi Fiqh." },
       { property: "og:description", content: "An Islamic Zakat calculator for Muslims to accurately determine Zakat obligations based on Hanafi Fiqh." },
       { name: "twitter:description", content: "An Islamic Zakat calculator for Muslims to accurately determine Zakat obligations based on Hanafi Fiqh." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2da851d5-fa22-4dd5-bdfc-9953645d4a30/id-preview-bdd0636c--67067ddc-e50d-4052-bb0e-2c643100c29f.lovable.app-1785717425223.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2da851d5-fa22-4dd5-bdfc-9953645d4a30/id-preview-bdd0636c--67067ddc-e50d-4052-bb0e-2c643100c29f.lovable.app-1785717425223.png" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "apple-touch-icon", href: "/icon-192.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -104,7 +109,33 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "manifest", href: "/manifest.webmanifest" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://zakatcalculatorhanafi.lovable.app/#organization",
+              name: "Hanafi Zakat Calculator",
+              url: "https://zakatcalculatorhanafi.lovable.app/",
+              logo: "https://zakatcalculatorhanafi.lovable.app/icon-512.png",
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://zakatcalculatorhanafi.lovable.app/#website",
+              name: "Hanafi Zakat Calculator",
+              url: "https://zakatcalculatorhanafi.lovable.app/",
+              inLanguage: ["en", "ur"],
+              publisher: { "@id": "https://zakatcalculatorhanafi.lovable.app/#organization" },
+            },
+          ],
+        }),
+      },
+    ],
   }),
+
 
   shellComponent: RootShell,
   component: RootComponent,

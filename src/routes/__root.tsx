@@ -79,6 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#0f5132" },
       { name: "author", content: "Hanafi Zakat Calculator" },
+      { name: "google-site-verification", content: "uQNYxnpnkIgOO8jIgO5UY6v61PmsD4RD29NLFjLkN5g" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { title: "Zakat calculator hanafi" },

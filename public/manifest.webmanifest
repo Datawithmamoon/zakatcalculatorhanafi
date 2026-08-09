@@ -1,10 +1,19 @@
 {
   "name": "Hanafi Zakat Calculator",
   "short_name": "Zakat",
-  "description": "Calculate Zakat according to Hanafi jurisprudence in English and Urdu.",
+  "description": "Calculate Zakat according to Hanafi jurisprudence in English and Urdu, with live gold and silver rates.",
   "start_url": "/",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#f7fbf8",
   "theme_color": "#0f5132",
-  "icons": [{ "src": "/favicon.ico", "sizes": "48x48", "type": "image/x-icon" }]
+  "categories": ["finance", "utilities", "education"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
 }

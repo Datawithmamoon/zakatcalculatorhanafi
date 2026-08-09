@@ -4,21 +4,33 @@ import { ZakatProvider, useZakat } from "@/components/zakat/context";
 import { AppHeader } from "@/components/zakat/AppHeader";
 import { Wizard } from "@/components/zakat/Wizard";
 
-const title = "Hanafi Zakat Calculator — Gold, Silver, Cash & Business";
+const title =
+  "Hanafi Zakat Calculator Pakistan | Live Gold & Silver Rates | Free Islamic Zakat Calculator";
 const description =
-  "Free step-by-step Zakat calculator based on Hanafi fiqh. Gold, silver, cash, business, investments, Nisab and Hawl explained in English and Urdu.";
+  "Calculate Zakat online free with live gold and silver rates. Hanafi fiqh Nisab, gold, silver, cash, business and investments — step by step in English and Urdu.";
 
 const SITE = "https://zakatcalculatorhanafi.lovable.app";
+const OG_IMAGE = SITE + "/icon-512.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title },
       { name: "description", content: description },
+      {
+        name: "keywords",
+        content:
+          "Hanafi Zakat Calculator, Pakistan Zakat Calculator, Islamic Zakat Calculator, calculate Zakat online, live gold rate, live silver rate, Zakat Nisab",
+      },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:url", content: SITE + "/" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: OG_IMAGE },
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: description },
+      { name: "twitter:image", content: OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: SITE + "/" }],
     scripts: [
@@ -33,13 +45,30 @@ export const Route = createFileRoute("/")({
           operatingSystem: "Any",
           inLanguage: ["en", "ur"],
           description,
+          featureList: [
+            "Live gold and silver rates",
+            "Hanafi Nisab (87.48g gold / 612.36g silver)",
+            "Gold, silver, cash, business and investment assets",
+            "PDF and CSV export",
+          ],
           offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: SITE + "/" },
+          ],
         }),
       },
     ],
   }),
   component: Index,
 });
+
 
 function Shell() {
   const { t } = useZakat();

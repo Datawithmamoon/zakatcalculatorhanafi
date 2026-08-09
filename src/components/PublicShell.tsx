@@ -31,8 +31,24 @@ export function PublicShell({ children }: { children: ReactNode }) {
       </header>
       <main className="mx-auto max-w-3xl px-4 py-8">{children}</main>
       <footer className="mx-auto max-w-3xl px-4 pb-10 text-center text-xs text-muted-foreground">
-        Educational guidance based on Hanafi fiqh. Consult a qualified scholar for personal rulings.
+        <nav
+          aria-label="Footer"
+          className="mb-3 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm"
+        >
+          <Link to="/privacy" className="text-primary underline underline-offset-4">
+            Privacy
+          </Link>
+          <Link to="/terms" className="text-primary underline underline-offset-4">
+            Terms
+          </Link>
+          <Link to="/disclaimer" className="text-primary underline underline-offset-4">
+            Disclaimer
+          </Link>
+        </nav>
+        Educational guidance based on Hanafi fiqh. This calculator follows Hanafi jurisprudence and
+        is intended for educational purposes. For complex cases consult a qualified Hanafi Mufti.
       </footer>
+
     </div>
   );
 }

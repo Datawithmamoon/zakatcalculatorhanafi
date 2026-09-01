@@ -1,4 +1,4 @@
-import { defineMcp } from "@lovable.dev/mcp-js";
+import { defineMcp, type AnyToolDefinition } from "@lovable.dev/mcp-js";
 import calculateZakatTool from "./tools/calculate-zakat";
 import getMetalPricesTool from "./tools/get-metal-prices";
 import getNisabTool from "./tools/get-nisab";
@@ -17,5 +17,7 @@ export default defineMcp({
     getNisabTool,
     listFaqsTool,
     listGuideArticlesTool,
-  ],
+    // Tools without an outputSchema widen cleanly at runtime; the cast satisfies
+    // exactOptionalPropertyTypes.
+  ] as unknown as AnyToolDefinition[],
 });

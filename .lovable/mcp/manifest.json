@@ -1,0 +1,258 @@
+{
+  "version": 1,
+  "sdk_version": "1.0.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "zakat-pro",
+      "version": "0.1.0",
+      "title": "Zakat Pro"
+    },
+    "tools": [
+      {
+        "name": "calculate_zakat",
+        "title": "Calculate Zakat (Hanafi)",
+        "description": "Calculate Zakat due according to Hanafi fiqh from gold, silver, cash, business assets, investments, receivables and liabilities. Metal prices default to live spot rates when not supplied.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "currency": {
+              "default": "PKR",
+              "description": "ISO 4217 currency code used for all amounts.",
+              "type": "string",
+              "pattern": "^[A-Za-z]{3}$"
+            },
+            "hawlCompleted": {
+              "default": true,
+              "description": "Whether a full lunar year (Hawl) has passed over the wealth.",
+              "type": "boolean"
+            },
+            "nisabBasis": {
+              "default": "silver",
+              "description": "Which metal sets the Nisab threshold. Hanafi default: silver.",
+              "type": "string",
+              "enum": [
+                "silver",
+                "gold"
+              ]
+            },
+            "goldWeight": {
+              "default": 0,
+              "description": "Gold owned.",
+              "type": "number",
+              "minimum": 0
+            },
+            "goldUnit": {
+              "default": "gram",
+              "type": "string",
+              "enum": [
+                "gram",
+                "tola",
+                "kilogram"
+              ]
+            },
+            "goldPurity": {
+              "default": "24K",
+              "type": "string",
+              "enum": [
+                "24K",
+                "22K",
+                "21K",
+                "18K",
+                "14K"
+              ]
+            },
+            "silverWeight": {
+              "default": 0,
+              "description": "Silver owned.",
+              "type": "number",
+              "minimum": 0
+            },
+            "silverUnit": {
+              "default": "gram",
+              "type": "string",
+              "enum": [
+                "gram",
+                "tola",
+                "kilogram"
+              ]
+            },
+            "silverPurity": {
+              "default": "999",
+              "type": "string",
+              "enum": [
+                "800",
+                "900",
+                "925",
+                "958",
+                "999"
+              ]
+            },
+            "goldPricePerGram": {
+              "description": "Override the live gold price (per gram of pure gold).",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "silverPricePerGram": {
+              "description": "Override the live silver price (per gram of pure silver).",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "cash": {
+              "default": 0,
+              "description": "Cash in hand, bank balances and savings.",
+              "type": "number",
+              "minimum": 0
+            },
+            "businessAssets": {
+              "default": 0,
+              "description": "Business inventory and trade goods at market value.",
+              "type": "number",
+              "minimum": 0
+            },
+            "investments": {
+              "default": 0,
+              "description": "Shares, funds and other zakatable investments.",
+              "type": "number",
+              "minimum": 0
+            },
+            "receivablesLikely": {
+              "default": 0,
+              "description": "Debts owed to you that are likely to be recovered (zakatable).",
+              "type": "number",
+              "minimum": 0
+            },
+            "receivablesUncertain": {
+              "default": 0,
+              "description": "Doubtful debts (not zakatable until received).",
+              "type": "number",
+              "minimum": 0
+            },
+            "receivablesBad": {
+              "default": 0,
+              "description": "Bad debts (excluded).",
+              "type": "number",
+              "minimum": 0
+            },
+            "liabilities": {
+              "default": 0,
+              "description": "Immediately due debts and expenses deductible from wealth.",
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_metal_prices",
+        "title": "Get live gold and silver prices",
+        "description": "Fetch the current live spot price of gold and silver per gram in a given currency (default PKR), with the source and fetch timestamp.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "currency": {
+              "default": "PKR",
+              "description": "ISO 4217 currency code, e.g. PKR, USD, GBP.",
+              "type": "string",
+              "pattern": "^[A-Za-z]{3}$"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_nisab",
+        "title": "Get the current Nisab threshold",
+        "description": "Compute the current gold and silver Nisab thresholds from live market prices, using the app's configured gram weights (Hanafi default: 87.48g gold / 612.36g silver).",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "currency": {
+              "default": "PKR",
+              "description": "ISO 4217 currency code, e.g. PKR, USD.",
+              "type": "string",
+              "pattern": "^[A-Za-z]{3}$"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_faqs",
+        "title": "List published Zakat FAQs",
+        "description": "List the published Hanafi Zakat FAQs from this site, in English or Urdu.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "language": {
+              "default": "en",
+              "description": "Answer language: en or ur.",
+              "type": "string",
+              "enum": [
+                "en",
+                "ur"
+              ]
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_guide_articles",
+        "title": "List published Zakat guide articles",
+        "description": "List the published educational articles about Hanafi Zakat rulings. Pass a slug to fetch the full body of one article.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "language": {
+              "default": "en",
+              "description": "Content language: en or ur.",
+              "type": "string",
+              "enum": [
+                "en",
+                "ur"
+              ]
+            },
+            "slug": {
+              "description": "Optional article slug to fetch in full.",
+              "type": "string",
+              "maxLength": 200
+            }
+          }
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

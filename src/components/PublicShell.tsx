@@ -63,3 +63,21 @@ export function PublicShell({ children }: { children: ReactNode }) {
     </div>
   );
 }
+
+/**
+ * Wraps prose that only exists in English so it keeps LTR direction and
+ * alignment even while the shell is in Urdu (RTL) mode.
+ */
+export function EnglishBlock({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div dir="ltr" className={`text-left font-sans ${className}`}>
+      {children}
+    </div>
+  );
+}

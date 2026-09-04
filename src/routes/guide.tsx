@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PublicShell } from "@/components/PublicShell";
+import { pageCopy } from "@/lib/zakat/i18n";
+import { useLangPref } from "@/lib/zakat/useLangPref";
 import { getPublicEdu, type PublicEdu } from "@/lib/public-content.functions";
 
 const SITE = "https://zakatcalculatorhanafi.lovable.app";
@@ -55,20 +57,19 @@ export const Route = createFileRoute("/guide")({
 
 function GuidePage() {
   const { items } = Route.useLoaderData() as { items: PublicEdu[] };
+  const { lang } = useLangPref();
+  const c = pageCopy[lang];
 
   return (
     <PublicShell>
-      <h1 className="text-2xl font-semibold text-foreground">Hanafi Zakat guide</h1>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Reference notes on Zakatable wealth, personal needs (Hajat-e-Asliyah), deductible
-        liabilities, Nisab and Hawl.
-      </p>
+      <h1 className="text-2xl font-semibold text-foreground">{c.guideTitle}</h1>
+      <p className="mt-2 text-sm text-muted-foreground">{c.guideIntro}</p>
 
       {items.length === 0 ? (
-        <p className="mt-8 text-sm text-muted-foreground">No articles published yet.</p>
+        <p className="mt-8 text-sm text-muted-foreground">{c.empty}</p>
       ) : (
         <>
-          <nav aria-label="On this page" className="mt-6 rounded-xl border bg-card p-4">
+          <nav aria-label={c.onThisPage} className="mt-6 rounded-xl border bg-card p-4">
             <ul className="space-y-1 text-sm">
               {items.map((i) => (
                 <li key={i.id}>
@@ -109,7 +110,7 @@ function GuidePage() {
 
       <p className="mt-10 text-sm">
         <Link to="/" className="text-primary underline underline-offset-4">
-          Calculate your Zakat now
+          {c.toCalculator}
         </Link>
       </p>
     </PublicShell>

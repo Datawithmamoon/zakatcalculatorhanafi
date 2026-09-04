@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PublicShell } from "@/components/PublicShell";
+import { pageCopy } from "@/lib/zakat/i18n";
+import { useLangPref } from "@/lib/zakat/useLangPref";
 import { getPublicFaqs, type PublicFaq } from "@/lib/public-content.functions";
 import {
   Accordion,
@@ -56,16 +58,16 @@ export const Route = createFileRoute("/faq")({
 
 function FaqPage() {
   const { faqs } = Route.useLoaderData() as { faqs: PublicFaq[] };
+  const { lang } = useLangPref();
+  const c = pageCopy[lang];
 
   return (
     <PublicShell>
-      <h1 className="text-2xl font-semibold text-foreground">Zakat questions & answers</h1>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Frequently asked questions about calculating Zakat according to the Hanafi school.
-      </p>
+      <h1 className="text-2xl font-semibold text-foreground">{c.faqTitle}</h1>
+      <p className="mt-2 text-sm text-muted-foreground">{c.faqIntro}</p>
 
       {faqs.length === 0 ? (
-        <p className="mt-8 text-sm text-muted-foreground">No questions published yet.</p>
+        <p className="mt-8 text-sm text-muted-foreground">{c.empty}</p>
       ) : (
         <Accordion type="single" collapsible className="mt-6">
           {faqs.map((f) => (
@@ -98,7 +100,7 @@ function FaqPage() {
 
       <p className="mt-8 text-sm">
         <Link to="/" className="text-primary underline underline-offset-4">
-          Start the Zakat calculator
+          {c.toCalculator}
         </Link>
       </p>
     </PublicShell>

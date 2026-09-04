@@ -87,13 +87,13 @@ function GuidePage() {
                 <p className="text-xs uppercase tracking-wide text-muted-foreground">
                   {i.category}
                 </p>
-                <h2 className="mt-1 text-xl font-semibold text-foreground">{i.title_en}</h2>
+                <h2 dir="ltr" className="mt-1 text-left text-xl font-semibold text-foreground">{i.title_en}</h2>
                 {i.title_ur ? (
                   <p className="font-urdu text-sm text-muted-foreground" dir="rtl">
                     {i.title_ur}
                   </p>
                 ) : null}
-                <p className="mt-3 whitespace-pre-line text-sm text-foreground">{i.body_en}</p>
+                <p dir="ltr" className="mt-3 whitespace-pre-line text-left text-sm text-foreground">{i.body_en}</p>
                 {i.body_ur ? (
                   <p
                     className="font-urdu mt-3 whitespace-pre-line text-sm text-muted-foreground"

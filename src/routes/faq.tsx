@@ -73,7 +73,7 @@ function FaqPage() {
           {faqs.map((f) => (
             <AccordionItem key={f.id} value={f.id}>
               <AccordionTrigger className="text-left">
-                <span>
+                <span dir="ltr" className="text-left">
                   {f.question_en}
                   {f.question_ur ? (
                     <span className="font-urdu mt-1 block text-xs text-muted-foreground" dir="rtl">
@@ -83,7 +83,7 @@ function FaqPage() {
                 </span>
               </AccordionTrigger>
               <AccordionContent>
-                <p className="whitespace-pre-line text-sm text-foreground">{f.answer_en}</p>
+                <p dir="ltr" className="whitespace-pre-line text-left text-sm text-foreground">{f.answer_en}</p>
                 {f.answer_ur ? (
                   <p
                     className="font-urdu mt-3 whitespace-pre-line text-sm text-muted-foreground"

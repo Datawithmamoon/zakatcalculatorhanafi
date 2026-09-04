@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { PublicShell } from "@/components/PublicShell";
+import { EnglishBlock, PublicShell } from "@/components/PublicShell";
 
 const SITE = "https://zakatcalculatorhanafi.lovable.app";
 const title = "Privacy Policy — Hanafi Zakat Calculator";
@@ -26,6 +26,7 @@ export const Route = createFileRoute("/privacy")({
 function PrivacyPage() {
   return (
     <PublicShell>
+      <EnglishBlock>
       <h1 className="text-2xl font-semibold text-foreground">Privacy Policy</h1>
       <div className="mt-4 space-y-4 text-sm leading-relaxed text-muted-foreground">
         <p>
@@ -63,6 +64,7 @@ function PrivacyPage() {
           .
         </p>
       </div>
+      </EnglishBlock>
     </PublicShell>
   );
 }

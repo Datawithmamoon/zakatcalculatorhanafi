@@ -616,3 +616,43 @@ const ur: Dict = {
 };
 
 export const dictionaries: Record<Lang, Dict> = { en, ur };
+
+/** Shared site chrome strings used by public content pages (outside the wizard). */
+export interface SiteCopy {
+  appName: string;
+  navCalculator: string;
+  navGuide: string;
+  navFaq: string;
+  privacy: string;
+  terms: string;
+  disclaimerLink: string;
+  footerNote: string;
+  switchLang: string;
+}
+
+export const siteCopy: Record<Lang, SiteCopy> = {
+  en: {
+    appName: "Hanafi Zakat Calculator",
+    navCalculator: "Calculator",
+    navGuide: "Guide",
+    navFaq: "FAQ",
+    privacy: "Privacy",
+    terms: "Terms",
+    disclaimerLink: "Disclaimer",
+    footerNote:
+      "Educational guidance based on Hanafi fiqh. This calculator follows Hanafi jurisprudence and is intended for educational purposes. For complex cases consult a qualified Hanafi Mufti.",
+    switchLang: "اردو",
+  },
+  ur: {
+    appName: "حنفی زکوٰۃ کیلکولیٹر",
+    navCalculator: "کیلکولیٹر",
+    navGuide: "رہنمائی",
+    navFaq: "سوالات",
+    privacy: "پرائیویسی",
+    terms: "شرائط",
+    disclaimerLink: "اعلانِ لاتعلقی",
+    footerNote:
+      "یہ رہنمائی فقہ حنفی پر مبنی اور صرف تعلیمی مقصد کے لیے ہے۔ پیچیدہ مسائل میں کسی مستند حنفی مفتی صاحب سے رجوع کریں۔",
+    switchLang: "English",
+  },
+};

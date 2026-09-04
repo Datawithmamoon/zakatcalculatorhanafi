@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { PublicShell } from "@/components/PublicShell";
+import { EnglishBlock, PublicShell } from "@/components/PublicShell";
 
 const SITE = "https://zakatcalculatorhanafi.lovable.app";
 const title = "Disclaimer — Hanafi Zakat Calculator";
@@ -26,6 +26,7 @@ export const Route = createFileRoute("/disclaimer")({
 function DisclaimerPage() {
   return (
     <PublicShell>
+      <EnglishBlock>
       <h1 className="text-2xl font-semibold text-foreground">Disclaimer</h1>
       <div className="mt-4 space-y-4 text-sm leading-relaxed text-muted-foreground">
         <p>This calculator follows Hanafi jurisprudence.</p>
@@ -49,6 +50,7 @@ function DisclaimerPage() {
           </Link>
         </p>
       </div>
+      </EnglishBlock>
     </PublicShell>
   );
 }

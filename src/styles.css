@@ -207,9 +207,28 @@
     line-height: 2.1;
   }
 
-  :focus-visible {
+  /* Only interactive elements get a visible focus ring. A blanket
+     `:focus-visible` rule painted stray outlines around cards, headings and
+     other containers that receive programmatic focus. */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible,
+  [role="button"]:focus-visible,
+  [role="tab"]:focus-visible,
+  [role="link"]:focus-visible,
+  [contenteditable]:focus-visible,
+  [tabindex="0"]:focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
+  }
+
+  /* Containers focused by scripts (step headings, dialogs) must never show it. */
+  [tabindex="-1"]:focus,
+  [tabindex="-1"]:focus-visible {
+    outline: none;
   }
 }
 

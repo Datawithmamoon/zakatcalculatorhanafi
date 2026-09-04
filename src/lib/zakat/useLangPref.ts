@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { Lang } from "./i18n";
 
 const STORAGE_KEY = "hanafi-zakat-state-v1";
+const LANG_EVENT = "hanafi-zakat-lang";
 
 interface Stored {
   prefs?: { lang?: Lang; dark?: boolean; highContrast?: boolean };
@@ -29,11 +30,18 @@ export function useLangPref() {
 
   useEffect(() => {
     setLangState(read());
+    const sync = () => setLangState(read());
     const onStorage = (e: StorageEvent) => {
-      if (e.key === STORAGE_KEY) setLangState(read());
+      if (e.key === STORAGE_KEY) sync();
     };
+    // Same-tab hook instances (shell + page) stay in sync via a custom event;
+    // `storage` only fires in other tabs.
     window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    window.addEventListener(LANG_EVENT, sync);
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener(LANG_EVENT, sync);
+    };
   }, []);
 
   useEffect(() => {
@@ -52,6 +60,7 @@ export function useLangPref() {
     } catch {
       /* storage unavailable — the in-memory value still applies */
     }
+    window.dispatchEvent(new Event(LANG_EVENT));
   }, []);
 
   return { lang, setLang, toggle: () => setLang(lang === "ur" ? "en" : "ur") };

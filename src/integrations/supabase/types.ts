@@ -20,6 +20,9 @@ export type Database = {
           base_currency: string
           currency_symbol: string
           default_nisab_basis: string
+          fitrana_amount_per_person: number
+          fitrana_wheat_kg: number
+          fitrana_wheat_price_per_kg: number
           gold_price_per_gram: number
           id: string
           nisab_gold_grams: number
@@ -30,6 +33,8 @@ export type Database = {
           refresh_interval_minutes: number
           silver_price_per_gram: number
           updated_at: string
+          ushr_rate_irrigated: number
+          ushr_rate_rain: number
           zakat_rate: number
         }
         Insert: {
@@ -37,6 +42,9 @@ export type Database = {
           base_currency?: string
           currency_symbol?: string
           default_nisab_basis?: string
+          fitrana_amount_per_person?: number
+          fitrana_wheat_kg?: number
+          fitrana_wheat_price_per_kg?: number
           gold_price_per_gram?: number
           id?: string
           nisab_gold_grams?: number
@@ -47,6 +55,8 @@ export type Database = {
           refresh_interval_minutes?: number
           silver_price_per_gram?: number
           updated_at?: string
+          ushr_rate_irrigated?: number
+          ushr_rate_rain?: number
           zakat_rate?: number
         }
         Update: {
@@ -54,6 +64,9 @@ export type Database = {
           base_currency?: string
           currency_symbol?: string
           default_nisab_basis?: string
+          fitrana_amount_per_person?: number
+          fitrana_wheat_kg?: number
+          fitrana_wheat_price_per_kg?: number
           gold_price_per_gram?: number
           id?: string
           nisab_gold_grams?: number
@@ -64,6 +77,8 @@ export type Database = {
           refresh_interval_minutes?: number
           silver_price_per_gram?: number
           updated_at?: string
+          ushr_rate_irrigated?: number
+          ushr_rate_rain?: number
           zakat_rate?: number
         }
         Relationships: []

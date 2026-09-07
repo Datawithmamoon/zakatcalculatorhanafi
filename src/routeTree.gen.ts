@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as FitranaCalculatorRouteImport } from './routes/fitrana-calculator'
 import { Route as GuideRouteImport } from './routes/guide'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -44,6 +45,11 @@ const DisclaimerRoute = DisclaimerRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FitranaCalculatorRoute = FitranaCalculatorRouteImport.update({
+  id: '/fitrana-calculator',
+  path: '/fitrana-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuideRoute = GuideRouteImport.update({
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
+  '/fitrana-calculator': typeof FitranaCalculatorRoute
   '/guide': typeof GuideRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
+  '/fitrana-calculator': typeof FitranaCalculatorRoute
   '/guide': typeof GuideRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
+  '/fitrana-calculator': typeof FitranaCalculatorRoute
   '/guide': typeof GuideRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/disclaimer'
     | '/faq'
+    | '/fitrana-calculator'
     | '/guide'
     | '/mcp'
     | '/privacy'
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/disclaimer'
     | '/faq'
+    | '/fitrana-calculator'
     | '/guide'
     | '/mcp'
     | '/privacy'
@@ -158,6 +169,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/disclaimer'
     | '/faq'
+    | '/fitrana-calculator'
     | '/guide'
     | '/mcp'
     | '/privacy'
@@ -173,6 +185,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   DisclaimerRoute: typeof DisclaimerRoute
   FaqRoute: typeof FaqRoute
+  FitranaCalculatorRoute: typeof FitranaCalculatorRoute
   GuideRoute: typeof GuideRoute
   McpRoute: typeof McpRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -216,6 +229,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fitrana-calculator': {
+      id: '/fitrana-calculator'
+      path: '/fitrana-calculator'
+      fullPath: '/fitrana-calculator'
+      preLoaderRoute: typeof FitranaCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/guide': {
@@ -287,6 +307,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   DisclaimerRoute: DisclaimerRoute,
   FaqRoute: FaqRoute,
+  FitranaCalculatorRoute: FitranaCalculatorRoute,
   GuideRoute: GuideRoute,
   McpRoute: McpRoute,
   PrivacyRoute: PrivacyRoute,

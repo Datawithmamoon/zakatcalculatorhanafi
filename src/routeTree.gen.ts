@@ -16,6 +16,7 @@ import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as FitranaCalculatorRouteImport } from './routes/fitrana-calculator'
 import { Route as GuideRouteImport } from './routes/guide'
+import { Route as InheritanceCalculatorRouteImport } from './routes/inheritance-calculator'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -56,6 +57,11 @@ const FitranaCalculatorRoute = FitranaCalculatorRouteImport.update({
 const GuideRoute = GuideRouteImport.update({
   id: '/guide',
   path: '/guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InheritanceCalculatorRoute = InheritanceCalculatorRouteImport.update({
+  id: '/inheritance-calculator',
+  path: '/inheritance-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/fitrana-calculator': typeof FitranaCalculatorRoute
   '/guide': typeof GuideRoute
+  '/inheritance-calculator': typeof InheritanceCalculatorRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/fitrana-calculator': typeof FitranaCalculatorRoute
   '/guide': typeof GuideRoute
+  '/inheritance-calculator': typeof InheritanceCalculatorRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -134,6 +142,7 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/fitrana-calculator': typeof FitranaCalculatorRoute
   '/guide': typeof GuideRoute
+  '/inheritance-calculator': typeof InheritanceCalculatorRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/fitrana-calculator'
     | '/guide'
+    | '/inheritance-calculator'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/fitrana-calculator'
     | '/guide'
+    | '/inheritance-calculator'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/fitrana-calculator'
     | '/guide'
+    | '/inheritance-calculator'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
@@ -199,6 +211,7 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   FitranaCalculatorRoute: typeof FitranaCalculatorRoute
   GuideRoute: typeof GuideRoute
+  InheritanceCalculatorRoute: typeof InheritanceCalculatorRoute
   McpRoute: typeof McpRoute
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -256,6 +269,13 @@ declare module '@tanstack/react-router' {
       path: '/guide'
       fullPath: '/guide'
       preLoaderRoute: typeof GuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inheritance-calculator': {
+      id: '/inheritance-calculator'
+      path: '/inheritance-calculator'
+      fullPath: '/inheritance-calculator'
+      preLoaderRoute: typeof InheritanceCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -329,6 +349,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   FitranaCalculatorRoute: FitranaCalculatorRoute,
   GuideRoute: GuideRoute,
+  InheritanceCalculatorRoute: InheritanceCalculatorRoute,
   McpRoute: McpRoute,
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

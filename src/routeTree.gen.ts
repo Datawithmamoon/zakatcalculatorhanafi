@@ -14,11 +14,14 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as FitranaCalculatorRouteImport } from './routes/fitrana-calculator'
 import { Route as GuideRouteImport } from './routes/guide'
+import { Route as InheritanceCalculatorRouteImport } from './routes/inheritance-calculator'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as UshrCalculatorRouteImport } from './routes/ushr-calculator'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
@@ -46,9 +49,19 @@ const FaqRoute = FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FitranaCalculatorRoute = FitranaCalculatorRouteImport.update({
+  id: '/fitrana-calculator',
+  path: '/fitrana-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuideRoute = GuideRouteImport.update({
   id: '/guide',
   path: '/guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InheritanceCalculatorRoute = InheritanceCalculatorRouteImport.update({
+  id: '/inheritance-calculator',
+  path: '/inheritance-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -71,6 +84,11 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UshrCalculatorRoute = UshrCalculatorRouteImport.update({
+  id: '/ushr-calculator',
+  path: '/ushr-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
   Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
     id: '/.well-known/oauth-protected-resource',
@@ -88,11 +106,14 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
+  '/fitrana-calculator': typeof FitranaCalculatorRoute
   '/guide': typeof GuideRoute
+  '/inheritance-calculator': typeof InheritanceCalculatorRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/ushr-calculator': typeof UshrCalculatorRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
 }
@@ -101,11 +122,14 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
+  '/fitrana-calculator': typeof FitranaCalculatorRoute
   '/guide': typeof GuideRoute
+  '/inheritance-calculator': typeof InheritanceCalculatorRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/ushr-calculator': typeof UshrCalculatorRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
 }
@@ -116,11 +140,14 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
+  '/fitrana-calculator': typeof FitranaCalculatorRoute
   '/guide': typeof GuideRoute
+  '/inheritance-calculator': typeof InheritanceCalculatorRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/ushr-calculator': typeof UshrCalculatorRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
 }
@@ -131,11 +158,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/disclaimer'
     | '/faq'
+    | '/fitrana-calculator'
     | '/guide'
+    | '/inheritance-calculator'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
     | '/terms'
+    | '/ushr-calculator'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
   fileRoutesByTo: FileRoutesByTo
@@ -144,11 +174,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/disclaimer'
     | '/faq'
+    | '/fitrana-calculator'
     | '/guide'
+    | '/inheritance-calculator'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
     | '/terms'
+    | '/ushr-calculator'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
   id:
@@ -158,11 +191,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/disclaimer'
     | '/faq'
+    | '/fitrana-calculator'
     | '/guide'
+    | '/inheritance-calculator'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
     | '/terms'
+    | '/ushr-calculator'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
   fileRoutesById: FileRoutesById
@@ -173,11 +209,14 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   DisclaimerRoute: typeof DisclaimerRoute
   FaqRoute: typeof FaqRoute
+  FitranaCalculatorRoute: typeof FitranaCalculatorRoute
   GuideRoute: typeof GuideRoute
+  InheritanceCalculatorRoute: typeof InheritanceCalculatorRoute
   McpRoute: typeof McpRoute
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
+  UshrCalculatorRoute: typeof UshrCalculatorRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
 }
 
@@ -218,11 +257,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fitrana-calculator': {
+      id: '/fitrana-calculator'
+      path: '/fitrana-calculator'
+      fullPath: '/fitrana-calculator'
+      preLoaderRoute: typeof FitranaCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guide': {
       id: '/guide'
       path: '/guide'
       fullPath: '/guide'
       preLoaderRoute: typeof GuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inheritance-calculator': {
+      id: '/inheritance-calculator'
+      path: '/inheritance-calculator'
+      fullPath: '/inheritance-calculator'
+      preLoaderRoute: typeof InheritanceCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -251,6 +304,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ushr-calculator': {
+      id: '/ushr-calculator'
+      path: '/ushr-calculator'
+      fullPath: '/ushr-calculator'
+      preLoaderRoute: typeof UshrCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.well-known/oauth-protected-resource': {
@@ -287,11 +347,14 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   DisclaimerRoute: DisclaimerRoute,
   FaqRoute: FaqRoute,
+  FitranaCalculatorRoute: FitranaCalculatorRoute,
   GuideRoute: GuideRoute,
+  InheritanceCalculatorRoute: InheritanceCalculatorRoute,
   McpRoute: McpRoute,
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
+  UshrCalculatorRoute: UshrCalculatorRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
 }

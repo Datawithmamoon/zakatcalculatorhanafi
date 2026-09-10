@@ -186,7 +186,7 @@ export function Wizard() {
             </div>
           )}
 
-          <EduPanel edu={copy.edu} />
+          <EduPanel edu={copy.edu} stepKey={stepKey} />
         </div>
       </section>
 

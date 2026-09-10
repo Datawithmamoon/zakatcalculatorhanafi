@@ -21,6 +21,7 @@ export type LabelKey =
   | "mistakes"
   | "ruling"
   | "evidence"
+  | "source"
   | "weight"
   | "unit"
   | "gram"
@@ -132,6 +133,7 @@ const en: Dict = {
     mistakes: "Common mistakes",
     ruling: "Hanafi ruling",
     evidence: "Evidence",
+    source: "Source & references",
     weight: "Weight",
     unit: "Unit",
     gram: "Gram",
@@ -393,6 +395,7 @@ const ur: Dict = {
     mistakes: "عام غلطیاں",
     ruling: "حنفی حکم",
     evidence: "دلیل",
+    source: "حوالہ جات",
     weight: "وزن",
     unit: "پیمانہ",
     gram: "گرام",

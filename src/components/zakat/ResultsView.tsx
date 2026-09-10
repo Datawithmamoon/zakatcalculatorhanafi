@@ -14,7 +14,7 @@ import {
 import { calculateZakat } from "@/lib/zakat/engine";
 import { buildPayload, toCsv, fileStamp } from "@/lib/zakat/export";
 import { saveBlob, shareContent, printOrFallback } from "@/lib/platform";
-import { generateZakatPdf } from "@/lib/zakat/pdf";
+
 import type { PresetId } from "@/lib/zakat/presets";
 import { useZakat } from "./context";
 import { ChoiceButton, Money } from "./bits";
@@ -41,13 +41,16 @@ export function ResultsView({
       priceSource: settings?.price_source ?? "manual",
     });
 
-  const pdfBlob = () =>
-    generateZakatPdf(r, {
+  // jsPDF is heavy: load it only when the user actually exports or shares.
+  const pdfBlob = async (): Promise<Blob> => {
+    const { generateZakatPdf } = await import("@/lib/zakat/pdf");
+    return generateZakatPdf(r, {
       currency: t.currency,
       preset: presetId ?? "custom",
       priceSource: settings?.price_source ?? "manual",
       appName: "Hanafi Zakat Calculator",
     }).output("blob") as Blob;
+  };
 
   const withToast = async (fn: () => Promise<unknown>, ok: string) => {
     try {

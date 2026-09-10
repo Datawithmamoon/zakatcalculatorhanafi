@@ -82,10 +82,11 @@ export function ResultsView({
     );
 
   const exportPdf = () =>
-    withToast(() => saveBlob(`zakat-${fileStamp()}.pdf`, pdfBlob()), "PDF");
+    withToast(async () => saveBlob(`zakat-${fileStamp()}.pdf`, await pdfBlob()), "PDF");
 
-  const doPrint = () => printOrFallback(async () => {
-      await saveBlob(`zakat-${fileStamp()}.pdf`, pdfBlob());
+  const doPrint = () =>
+    printOrFallback(async () => {
+      await saveBlob(`zakat-${fileStamp()}.pdf`, await pdfBlob());
     });
 
   const rows: Array<[string, number]> = [
@@ -102,7 +103,7 @@ export function ResultsView({
     const outcome = await shareContent({
       title: t.appName,
       text,
-      file: { filename: `zakat-${fileStamp()}.pdf`, blob: pdfBlob() },
+      file: { filename: `zakat-${fileStamp()}.pdf`, blob: await pdfBlob() },
     });
     if (outcome === "copied") toast.success(lang === "ur" ? "کاپی ہو گیا" : "Copied to clipboard");
   };

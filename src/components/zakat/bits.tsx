@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { BookOpen, CircleAlert, CircleCheck, CircleX, Scale } from "lucide-react";
-import type { Edu } from "@/lib/zakat/i18n";
+import { BookOpen, CircleAlert, CircleCheck, CircleX, Library, Scale } from "lucide-react";
+import type { Edu, StepKey } from "@/lib/zakat/i18n";
+import { eduSources } from "@/lib/zakat/sources";
 import { parseAmount } from "@/lib/zakat/engine";
 import { useZakat } from "./context";
 import {
@@ -13,16 +14,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-export function EduPanel({ edu }: { edu: Edu }) {
-  const { t } = useZakat();
-  const rows: Array<{ key: keyof Edu; icon: typeof BookOpen }> = [
+export function EduPanel({ edu, stepKey }: { edu: Edu; stepKey?: StepKey }) {
+  const { t, lang } = useZakat();
+  const source = stepKey ? eduSources[lang][stepKey] : undefined;
+  const full: Edu & { source?: string } = { ...edu, ...(source ? { source } : {}) };
+  const rows: Array<{ key: keyof typeof full; icon: typeof BookOpen }> = [
     { key: "included", icon: CircleCheck },
     { key: "excluded", icon: CircleX },
     { key: "mistakes", icon: CircleAlert },
     { key: "ruling", icon: Scale },
     { key: "evidence", icon: BookOpen },
+    { key: "source", icon: Library },
   ];
-  const available = rows.filter((r) => edu[r.key]);
+  const available = rows.filter((r) => full[r.key]);
   if (available.length === 0) return null;
 
   return (

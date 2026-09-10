@@ -25,6 +25,8 @@ export type Database = {
           fitrana_wheat_price_per_kg: number
           gold_price_per_gram: number
           id: string
+          inheritance_notice_en: string
+          inheritance_notice_ur: string
           nisab_gold_grams: number
           nisab_silver_grams: number
           price_source: string
@@ -47,6 +49,8 @@ export type Database = {
           fitrana_wheat_price_per_kg?: number
           gold_price_per_gram?: number
           id?: string
+          inheritance_notice_en?: string
+          inheritance_notice_ur?: string
           nisab_gold_grams?: number
           nisab_silver_grams?: number
           price_source?: string
@@ -69,6 +73,8 @@ export type Database = {
           fitrana_wheat_price_per_kg?: number
           gold_price_per_gram?: number
           id?: string
+          inheritance_notice_en?: string
+          inheritance_notice_ur?: string
           nisab_gold_grams?: number
           nisab_silver_grams?: number
           price_source?: string

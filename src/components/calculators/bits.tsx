@@ -133,18 +133,30 @@ export function EduBlock({
   ruling,
   mistakes,
   evidence,
+  source,
   labels,
 }: {
   ruling: string;
   mistakes: string;
   evidence?: string;
-  labels: { ruling: string; mistakes: string; evidence: string };
+  source?: string;
+  labels: { ruling: string; mistakes: string; evidence: string; source?: string };
 }) {
   const rows = [
     { key: "ruling", icon: Scale, label: labels.ruling, body: ruling },
     { key: "mistakes", icon: CircleAlert, label: labels.mistakes, body: mistakes },
     ...(evidence
       ? [{ key: "evidence", icon: BookOpen, label: labels.evidence, body: evidence }]
+      : []),
+    ...(source
+      ? [
+          {
+            key: "source",
+            icon: Library,
+            label: labels.source ?? "Source & references",
+            body: source,
+          },
+        ]
       : []),
   ];
   return (

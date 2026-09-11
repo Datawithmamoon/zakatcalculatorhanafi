@@ -18,7 +18,7 @@ export function EduPanel({ edu, stepKey }: { edu: Edu; stepKey?: StepKey }) {
   const { t, lang } = useZakat();
   const source = stepKey ? eduSources[lang][stepKey] : undefined;
   const full: Edu & { source?: string } = { ...edu, ...(source ? { source } : {}) };
-  const rows: Array<{ key: keyof typeof full; icon: typeof BookOpen }> = [
+  const rows: Array<{ key: keyof Edu | "source"; icon: typeof BookOpen }> = [
     { key: "included", icon: CircleCheck },
     { key: "excluded", icon: CircleX },
     { key: "mistakes", icon: CircleAlert },
@@ -40,7 +40,7 @@ export function EduPanel({ edu, stepKey }: { edu: Edu; stepKey?: StepKey }) {
             </span>
           </AccordionTrigger>
           <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
-            {edu[key]}
+            {full[key]}
           </AccordionContent>
         </AccordionItem>
       ))}

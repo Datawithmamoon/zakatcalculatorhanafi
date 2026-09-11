@@ -29,7 +29,7 @@ export const eduSources: Record<Lang, Partial<Record<StepKey, string>>> = {
       "al-Hidayah, Kitab al-Zakat, Bab al-`Ushr — Imam Abu Hanifa: `Ushr is due on all produce of the land with no Nisab and no Hawl. Sahih al-Bukhari 1483.",
     livestock:
       "Bada'i` al-Sana'i` 2/26–33 and al-Fatawa al-Hindiyya 1/176 — the prescribed sa'imah scale for camels, cattle and sheep. Sahih al-Bukhari 1454.",
-    nonZakatable:
+    excluded:
       "Bada'i` al-Sana'i` 2/11 — Zakat is only on mal nami (growing wealth); hajat asliyya (home, transport, tools of the trade) are exempt. Radd al-Muhtar 2/262.",
     liabilities:
       "al-Fatawa al-Hindiyya 1/172; Radd al-Muhtar 2/260 — debts due now are deducted; long-term instalment debt is deducted only to the extent of the instalments currently owed.",
@@ -52,7 +52,7 @@ export const eduSources: Record<Lang, Partial<Record<StepKey, string>>> = {
       "الہدایہ، باب العشر — امام ابو حنیفہؒ کے نزدیک زمین کی ہر پیداوار پر عشر ہے، نہ نصاب کی شرط نہ حول کی۔ صحیح بخاری ۱۴۸۳۔",
     livestock:
       "بدائع الصنائع ۲/۲۶–۳۳؛ الفتاویٰ الہندیہ ۱/۱۷۶ — سائمہ اونٹ، گائے اور بکریوں کا مقررہ جدول۔ صحیح بخاری ۱۴۵۴۔",
-    nonZakatable:
+    excluded:
       "بدائع الصنائع ۲/۱۱ — زکوٰۃ صرف مالِ نامی پر ہے؛ حاجاتِ اصلیہ (مکان، سواری، آلاتِ پیشہ) مستثنیٰ ہیں۔ ردّ المحتار ۲/۲۶۲۔",
     liabilities:
       "الفتاویٰ الہندیہ ۱/۱۷۲؛ ردّ المحتار ۲/۲۶۰ — واجب الادا قرض منہا ہوگا؛ طویل المدت اقساط میں صرف واجب الادا اقساط منہا کی جائیں گی۔",

@@ -26,6 +26,12 @@ export function PublicShell({ children }: { children: ReactNode }) {
             <Link to="/" className="rounded-md px-3 py-2 underline-offset-4 hover:underline">
               {c.navCalculator}
             </Link>
+            <Link
+              to="/haq-mehr-calculator"
+              className="rounded-md px-3 py-2 underline-offset-4 hover:underline"
+            >
+              {lang === "ur" ? "حقِ مہر" : "Haq Mehr"}
+            </Link>
             <Link to="/guide" className="rounded-md px-3 py-2 underline-offset-4 hover:underline">
               {c.navGuide}
             </Link>

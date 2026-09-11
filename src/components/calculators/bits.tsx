@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { BookOpen, CircleAlert, Scale } from "lucide-react";
+import { BookOpen, CircleAlert, Library, Scale } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {

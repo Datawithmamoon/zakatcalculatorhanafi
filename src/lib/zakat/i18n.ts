@@ -660,6 +660,43 @@ export const siteCopy: Record<Lang, SiteCopy> = {
   },
 };
 
+export interface HomeCopy {
+  eyebrow: string;
+  title: string;
+  intro: string;
+  zakatTitle: string;
+  zakatDescription: string;
+  zakatAction: string;
+  mehrTitle: string;
+  mehrDescription: string;
+  mehrAction: string;
+}
+
+export const homeCopy: Record<Lang, HomeCopy> = {
+  en: {
+    eyebrow: "Islamic calculators",
+    title: "What would you like to calculate?",
+    intro: "Choose a calculator to begin. Each tool is available in English and Urdu.",
+    zakatTitle: "Zakat Calculator",
+    zakatDescription: "Calculate your Zakat step by step according to Hanafi jurisprudence.",
+    zakatAction: "Calculate Zakat",
+    mehrTitle: "Haq Mehr Calculator",
+    mehrDescription: "Calculate the value of Haq Mehr based on the current live silver price.",
+    mehrAction: "Calculate Haq Mehr",
+  },
+  ur: {
+    eyebrow: "اسلامی کیلکولیٹرز",
+    title: "آپ کیا حساب کرنا چاہتے ہیں؟",
+    intro: "شروع کرنے کے لیے کیلکولیٹر منتخب کریں۔ دونوں سہولیات اردو اور انگریزی میں دستیاب ہیں۔",
+    zakatTitle: "زکوٰۃ کیلکولیٹر",
+    zakatDescription: "فقہ حنفی کے مطابق مرحلہ وار اپنی زکوٰۃ کا درست حساب کریں۔",
+    zakatAction: "زکوٰۃ کا حساب کریں",
+    mehrTitle: "حقِ مہر کیلکولیٹر",
+    mehrDescription: "چاندی کی موجودہ لائیو قیمت کی بنیاد پر حقِ مہر کی مالیت معلوم کریں۔",
+    mehrAction: "حقِ مہر کا حساب کریں",
+  },
+};
+
 /** Headings for the public content pages. */
 export const pageCopy: Record<Lang, Record<"faqTitle" | "faqIntro" | "guideTitle" | "guideIntro" | "toCalculator" | "onThisPage" | "empty", string>> = {
   en: {

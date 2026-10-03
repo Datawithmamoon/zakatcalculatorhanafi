@@ -75,7 +75,7 @@ function AdminPage() {
           </div>
           <div className="flex gap-2">
             <Button size="sm" variant="secondary" asChild>
-              <Link to="/">
+              <Link to="/zakat-calculator">
                 <ArrowLeft className="size-4 rtl:rotate-180" aria-hidden /> Calculator
               </Link>
             </Button>

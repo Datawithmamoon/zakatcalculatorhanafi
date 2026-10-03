@@ -10,8 +10,6 @@ const description =
   "Calculate Zakat online free with live gold and silver rates. Hanafi fiqh Nisab, gold, silver, cash, business and investments — step by step in English and Urdu.";
 
 const SITE = "https://zakatcalculatorhanafi.lovable.app";
-const OG_IMAGE = SITE + "/icon-512.png";
-
 export const Route = createFileRoute("/zakat-calculator")({
   head: () => ({
     meta: [
@@ -27,10 +25,9 @@ export const Route = createFileRoute("/zakat-calculator")({
       { property: "og:description", content: description },
       { property: "og:url", content: SITE + "/zakat-calculator" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: OG_IMAGE },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: title },
       { name: "twitter:description", content: description },
-      { name: "twitter:image", content: OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: SITE + "/zakat-calculator" }],
     scripts: [

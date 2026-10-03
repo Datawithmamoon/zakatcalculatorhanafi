@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep `/` as the calculator-selection page and each calculator on its own top-level route so navigation, SEO, and calculator logic remain independent.

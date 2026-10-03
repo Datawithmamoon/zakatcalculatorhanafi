@@ -99,7 +99,7 @@ function FaqPage() {
       )}
 
       <p className="mt-8 text-sm">
-        <Link to="/" className="text-primary underline underline-offset-4">
+        <Link to="/zakat-calculator" className="text-primary underline underline-offset-4">
           {c.toCalculator}
         </Link>
       </p>

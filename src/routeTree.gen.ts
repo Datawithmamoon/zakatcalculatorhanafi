@@ -23,6 +23,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as UshrCalculatorRouteImport } from './routes/ushr-calculator'
+import { Route as ZakatCalculatorRouteImport } from './routes/zakat-calculator'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
@@ -95,6 +96,11 @@ const UshrCalculatorRoute = UshrCalculatorRouteImport.update({
   path: '/ushr-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ZakatCalculatorRoute = ZakatCalculatorRouteImport.update({
+  id: '/zakat-calculator',
+  path: '/zakat-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
   Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
     id: '/.well-known/oauth-protected-resource',
@@ -121,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/ushr-calculator': typeof UshrCalculatorRoute
+  '/zakat-calculator': typeof ZakatCalculatorRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
 }
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/ushr-calculator': typeof UshrCalculatorRoute
+  '/zakat-calculator': typeof ZakatCalculatorRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
 }
@@ -157,6 +165,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/ushr-calculator': typeof UshrCalculatorRoute
+  '/zakat-calculator': typeof ZakatCalculatorRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
 }
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/ushr-calculator'
+    | '/zakat-calculator'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
   fileRoutesByTo: FileRoutesByTo
@@ -193,6 +203,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/ushr-calculator'
+    | '/zakat-calculator'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
   id:
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/ushr-calculator'
+    | '/zakat-calculator'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
   fileRoutesById: FileRoutesById
@@ -230,6 +242,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   UshrCalculatorRoute: typeof UshrCalculatorRoute
+  ZakatCalculatorRoute: typeof ZakatCalculatorRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
 }
 
@@ -333,6 +346,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UshrCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/zakat-calculator': {
+      id: '/zakat-calculator'
+      path: '/zakat-calculator'
+      fullPath: '/zakat-calculator'
+      preLoaderRoute: typeof ZakatCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/.well-known/oauth-protected-resource': {
       id: '/.well-known/oauth-protected-resource'
       path: '/.well-known/oauth-protected-resource'
@@ -376,6 +396,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   UshrCalculatorRoute: UshrCalculatorRoute,
+  ZakatCalculatorRoute: ZakatCalculatorRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
 }

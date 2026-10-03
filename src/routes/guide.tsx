@@ -109,7 +109,7 @@ function GuidePage() {
       )}
 
       <p className="mt-10 text-sm">
-        <Link to="/" className="text-primary underline underline-offset-4">
+        <Link to="/zakat-calculator" className="text-primary underline underline-offset-4">
           {c.toCalculator}
         </Link>
       </p>

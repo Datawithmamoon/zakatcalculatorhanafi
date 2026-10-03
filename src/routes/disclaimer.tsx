@@ -45,7 +45,7 @@ function DisclaimerPage() {
           assets require personal guidance from a scholar.
         </p>
         <p>
-          <Link to="/" className="text-primary underline underline-offset-4">
+          <Link to="/zakat-calculator" className="text-primary underline underline-offset-4">
             Back to the Zakat calculator
           </Link>
         </p>

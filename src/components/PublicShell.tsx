@@ -23,7 +23,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
             <span className="text-base font-semibold">{c.appName}</span>
           </Link>
           <nav aria-label="Main" className="flex items-center gap-1 text-sm">
-            <Link to="/" className="rounded-md px-3 py-2 underline-offset-4 hover:underline">
+            <Link to="/zakat-calculator" className="rounded-md px-3 py-2 underline-offset-4 hover:underline">
               {c.navCalculator}
             </Link>
             <Link

@@ -670,6 +670,15 @@ export interface HomeCopy {
   mehrTitle: string;
   mehrDescription: string;
   mehrAction: string;
+  fitranaTitle: string;
+  fitranaDescription: string;
+  fitranaAction: string;
+  ushrTitle: string;
+  ushrDescription: string;
+  ushrAction: string;
+  inheritanceTitle: string;
+  inheritanceDescription: string;
+  inheritanceAction: string;
 }
 
 export const homeCopy: Record<Lang, HomeCopy> = {
@@ -683,6 +692,18 @@ export const homeCopy: Record<Lang, HomeCopy> = {
     mehrTitle: "Haq Mehr Calculator",
     mehrDescription: "Calculate the value of Haq Mehr based on the current live silver price.",
     mehrAction: "Calculate Haq Mehr",
+    fitranaTitle: "Fitrana Calculator",
+    fitranaDescription:
+      "Calculate Sadaqat al-Fitr for your household — half a sa' of wheat per person.",
+    fitranaAction: "Calculate Fitrana",
+    ushrTitle: "Ushr Calculator",
+    ushrDescription:
+      "Calculate agricultural Zakat — 10% on rain-fed land and 5% on irrigated land, due at harvest.",
+    ushrAction: "Calculate Ushr",
+    inheritanceTitle: "Inheritance Calculator",
+    inheritanceDescription:
+      "Distribute an estate according to the fixed shares of Hanafi inheritance law.",
+    inheritanceAction: "Calculate Inheritance",
   },
   ur: {
     eyebrow: "اسلامی کیلکولیٹرز",
@@ -694,6 +715,18 @@ export const homeCopy: Record<Lang, HomeCopy> = {
     mehrTitle: "حقِ مہر کیلکولیٹر",
     mehrDescription: "چاندی کی موجودہ لائیو قیمت کی بنیاد پر حقِ مہر کی مالیت معلوم کریں۔",
     mehrAction: "حقِ مہر کا حساب کریں",
+    fitranaTitle: "فطرانہ کیلکولیٹر",
+    fitranaDescription:
+      "فقہ حنفی کے مطابق فی فرد گندم کی آدھی صاع کی بنیاد پر پورے گھر کا فطرانہ معلوم کریں۔",
+    fitranaAction: "فطرانہ کا حساب کریں",
+    ushrTitle: "عشر کیلکولیٹر",
+    ushrDescription:
+      "بارانی زمین پر دس فیصد اور آبپاشی والی زمین پر پانچ فیصد کے مطابق زرعی زکوٰۃ کا حساب کریں۔",
+    ushrAction: "عشر کا حساب کریں",
+    inheritanceTitle: "وراثت کیلکولیٹر",
+    inheritanceDescription:
+      "فقہ حنفی کے مطابق شرعی حصوں کے مطابق ترکے کی تقسیم کا حساب کریں۔",
+    inheritanceAction: "وراثت کا حساب کریں",
   },
 };
 

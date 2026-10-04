@@ -11,6 +11,7 @@ import { CurrenciesTab } from "@/components/admin/CurrenciesTab";
 import { FaqTab } from "@/components/admin/FaqTab";
 import { ContentTab } from "@/components/admin/ContentTab";
 import { MembersTab } from "@/components/admin/MembersTab";
+import { FitranaUshrTab } from "@/components/admin/FitranaUshrTab";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toaster } from "@/components/ui/sonner";
@@ -123,6 +124,7 @@ function AdminPage() {
               <TabsTrigger value="faqs">FAQs</TabsTrigger>
               <TabsTrigger value="content">Education</TabsTrigger>
               <TabsTrigger value="members">Members</TabsTrigger>
+              <TabsTrigger value="fitrana">Fitrana &amp; Ushr</TabsTrigger>
             </TabsList>
             <TabsContent value="prices">
               <PricesTab />
@@ -138,6 +140,9 @@ function AdminPage() {
             </TabsContent>
             <TabsContent value="members">
               <MembersTab />
+            </TabsContent>
+            <TabsContent value="fitrana">
+              <FitranaUshrTab />
             </TabsContent>
           </Tabs>
         )}

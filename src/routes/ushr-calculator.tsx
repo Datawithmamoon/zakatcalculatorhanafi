@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useDeferredValue, useMemo, useState } from "react";
 import { PublicShell } from "@/components/PublicShell";
-import { EduBlock, NumField, ResultRow, useMoneyFormat } from "@/components/calculators/bits";
+import { NumField, ResultRow, useMoneyFormat } from "@/components/calculators/bits";
 import { calculateUshr, type IrrigationType } from "@/lib/calculators/ushr";
 import { calcCopy } from "@/lib/calculators/copy";
 import { useLangPref } from "@/lib/zakat/useLangPref";
@@ -12,6 +12,10 @@ const SITE = "https://zakatcalculatorhanafi.lovable.app";
 const title = "Ushr Calculator (Agricultural Zakat) — Hanafi | English & Urdu";
 const description =
   "Free Ushr calculator on Hanafi fiqh: 10% on rain-fed land and 5% on irrigated land, due at harvest with no Nisab or Hawl. Calculate agricultural Zakat in English or Urdu.";
+
+const EduBlock = lazy(() =>
+  import("@/components/calculators/bits").then((m) => ({ default: m.EduBlock })),
+);
 
 export const Route = createFileRoute("/ushr-calculator")({
   head: () => ({
@@ -62,9 +66,20 @@ function UshrPage() {
   const rateRain = Number(settings?.ushr_rate_rain ?? 0.1);
   const rateIrrigated = Number(settings?.ushr_rate_irrigated ?? 0.05);
 
+  const deferredQuantity = useDeferredValue(quantity);
+  const deferredPrice = useDeferredValue(price);
+  const deferredIrrigation = useDeferredValue(irrigation);
+
   const result = useMemo(
-    () => calculateUshr({ quantity, pricePerUnit: price, irrigation, rateRain, rateIrrigated }),
-    [quantity, price, irrigation, rateRain, rateIrrigated],
+    () =>
+      calculateUshr({
+        quantity: deferredQuantity,
+        pricePerUnit: deferredPrice,
+        irrigation: deferredIrrigation,
+        rateRain,
+        rateIrrigated,
+      }),
+    [deferredQuantity, deferredPrice, deferredIrrigation, rateRain, rateIrrigated],
   );
 
   const invalid = lang === "ur" ? "درست عدد درج کریں" : "Enter a valid number";
@@ -135,12 +150,14 @@ function UshrPage() {
       </section>
 
       <div className="mt-6">
-        <EduBlock
-          ruling={c.ushrRuling}
-          mistakes={c.ushrMistakes}
-          evidence={c.ushrEvidence}
-          labels={{ ruling: c.ruling, mistakes: c.mistakes, evidence: c.evidence }}
-        />
+        <Suspense fallback={<div className="h-24 animate-pulse rounded-xl bg-muted/20" />}>
+          <EduBlock
+            ruling={c.ushrRuling}
+            mistakes={c.ushrMistakes}
+            evidence={c.ushrEvidence}
+            labels={{ ruling: c.ruling, mistakes: c.mistakes, evidence: c.evidence }}
+          />
+        </Suspense>
       </div>
     </PublicShell>
   );

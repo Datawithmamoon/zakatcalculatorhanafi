@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useDeferredValue, useMemo, useState } from "react";
 import { PublicShell } from "@/components/PublicShell";
-import { EduBlock, NumField, ResultRow } from "@/components/calculators/bits";
+import { NumField, ResultRow } from "@/components/calculators/bits";
 import { useLangPref } from "@/lib/zakat/useLangPref";
 import { useLivePrices } from "@/lib/zakat/useLivePrices";
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,10 @@ const SITE = "https://zakatcalculatorhanafi.lovable.app";
 const title = "Haq Mehr Calculator — Live Silver Rate | English & Urdu";
 const description =
   "Calculate the value of Haq Mehr based on the current live Silver price. Enter the silver weight in grams and view the amount in PKR or any major world currency.";
+
+const EduBlock = lazy(() =>
+  import("@/components/calculators/bits").then((m) => ({ default: m.EduBlock })),
+);
 
 export const Route = createFileRoute("/haq-mehr-calculator")({
   head: () => ({
@@ -139,9 +143,12 @@ function HaqMehrPage() {
   const money = (v: number) =>
     `${currency} ${new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(v)}`;
 
+  const deferredGrams = useDeferredValue(grams);
+  const deferredRate = useDeferredValue(prices.silverPerGram);
+
   const total = useMemo(
-    () => (prices.silverPerGram ? prices.silverPerGram * grams : null),
-    [prices.silverPerGram, grams],
+    () => (deferredRate ? deferredRate * deferredGrams : null),
+    [deferredRate, deferredGrams],
   );
 
   const invalid = lang === "ur" ? "درست عدد درج کریں" : "Enter a valid number";
@@ -220,12 +227,14 @@ function HaqMehrPage() {
       </section>
 
       <div className="mt-6">
-        <EduBlock
-          ruling={c.rulingBody}
-          mistakes={c.mistakesBody}
-          evidence={c.evidenceBody}
-          labels={{ ruling: c.ruling, mistakes: c.mistakes, evidence: c.evidence }}
-        />
+        <Suspense fallback={<div className="h-24 animate-pulse rounded-xl bg-muted/20" />}>
+          <EduBlock
+            ruling={c.rulingBody}
+            mistakes={c.mistakesBody}
+            evidence={c.evidenceBody}
+            labels={{ ruling: c.ruling, mistakes: c.mistakes, evidence: c.evidence }}
+          />
+        </Suspense>
       </div>
     </PublicShell>
   );

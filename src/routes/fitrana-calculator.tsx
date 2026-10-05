@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useDeferredValue, useMemo, useState } from "react";
 import { PublicShell } from "@/components/PublicShell";
-import { CheckField, EduBlock, NumField, ResultRow, useMoneyFormat } from "@/components/calculators/bits";
+import { CheckField, NumField, ResultRow, useMoneyFormat } from "@/components/calculators/bits";
 import { calculateFitrana } from "@/lib/calculators/fitrana";
 import { calcCopy } from "@/lib/calculators/copy";
 import { useLangPref } from "@/lib/zakat/useLangPref";
@@ -11,6 +11,10 @@ const SITE = "https://zakatcalculatorhanafi.lovable.app";
 const title = "Fitrana Calculator (Sadaqat al-Fitr) — Hanafi | English & Urdu";
 const description =
   "Free Fitrana calculator based on Hanafi fiqh: half a sa' of wheat per person. Work out Sadaqat al-Fitr for your whole household in seconds, in English or Urdu.";
+
+const EduBlock = lazy(() =>
+  import("@/components/calculators/bits").then((m) => ({ default: m.EduBlock })),
+);
 
 export const Route = createFileRoute("/fitrana-calculator")({
   head: () => ({
@@ -62,16 +66,22 @@ function FitranaPage() {
   const [wheatPrice, setWheatPrice] = useState<number | null>(null);
 
   const price = wheatPrice ?? wheatPriceDefault;
+
+  const deferredPeople = useDeferredValue(people);
+  const deferredPrice = useDeferredValue(price);
+  const deferredFixed = useDeferredValue(fixed);
+  const deferredUseFixed = useDeferredValue(useFixed);
+
   const result = useMemo(
     () =>
       calculateFitrana({
-        people,
+        people: deferredPeople,
         wheatKgPerPerson: wheatKg,
-        wheatPricePerKg: price,
-        fixedPerPerson: fixed,
-        useFixed,
+        wheatPricePerKg: deferredPrice,
+        fixedPerPerson: deferredFixed,
+        useFixed: deferredUseFixed,
       }),
-    [people, wheatKg, price, fixed, useFixed],
+    [deferredPeople, wheatKg, deferredPrice, deferredFixed, deferredUseFixed],
   );
 
   const invalid = lang === "ur" ? "درست عدد درج کریں" : "Enter a valid number";
@@ -130,12 +140,14 @@ function FitranaPage() {
       </section>
 
       <div className="mt-6">
-        <EduBlock
-          ruling={c.fitranaRuling}
-          mistakes={c.fitranaMistakes}
-          evidence={c.fitranaEvidence}
-          labels={{ ruling: c.ruling, mistakes: c.mistakes, evidence: c.evidence }}
-        />
+        <Suspense fallback={<div className="h-24 animate-pulse rounded-xl bg-muted/20" />}>
+          <EduBlock
+            ruling={c.fitranaRuling}
+            mistakes={c.fitranaMistakes}
+            evidence={c.fitranaEvidence}
+            labels={{ ruling: c.ruling, mistakes: c.mistakes, evidence: c.evidence }}
+          />
+        </Suspense>
       </div>
     </PublicShell>
   );

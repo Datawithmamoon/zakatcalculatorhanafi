@@ -180,8 +180,11 @@ export function EduBlock({
 
 /** Formats a money amount with the site currency, without pulling in the wizard context. */
 export function useMoneyFormat(lang: string, symbol: string) {
-  return (value: number) =>
-    `${symbol} ${new Intl.NumberFormat(lang === "ur" ? "ur-PK" : "en-PK", {
-      maximumFractionDigits: 2,
-    }).format(Number.isFinite(value) ? value : 0)}`;
+  return useMemo(
+    () => (value: number) =>
+      `${symbol} ${new Intl.NumberFormat(lang === "ur" ? "ur-PK" : "en-PK", {
+        maximumFractionDigits: 2,
+      }).format(Number.isFinite(value) ? value : 0)}`,
+    [lang, symbol],
+  );
 }

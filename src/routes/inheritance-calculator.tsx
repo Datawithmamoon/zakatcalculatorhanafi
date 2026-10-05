@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useDeferredValue, useMemo, useState } from "react";
 import { PublicShell } from "@/components/PublicShell";
-import { CheckField, EduBlock, NumField, useMoneyFormat } from "@/components/calculators/bits";
+import { CheckField, NumField, useMoneyFormat } from "@/components/calculators/bits";
 import { calculateInheritance, emptyHeirs, type HeirsInput } from "@/lib/calculators/inheritance";
 import { calcCopy } from "@/lib/calculators/copy";
-import { useLangPref } from "@/lib/zakat/useLangPref";
+import { useLangPref } from "@/lib/zzakat/useLangPref";
 import { useSettings } from "@/lib/settings";
 import { Label } from "@/components/ui/label";
 
@@ -12,6 +12,10 @@ const SITE = "https://zakatcalculatorhanafi.lovable.app";
 const title = "Islamic Inheritance Calculator (Faraid) — Hanafi | English & Urdu";
 const description =
   "Free Hanafi inheritance calculator: divide an estate between spouse, children, parents, grandparents and siblings with correct Quranic shares, 'Awl and Radd, in English or Urdu.";
+
+const EduBlock = lazy(() =>
+  import("@/components/calculators/bits").then((m) => ({ default: m.EduBlock })),
+);
 
 export const Route = createFileRoute("/inheritance-calculator")({
   head: () => ({
@@ -63,7 +67,9 @@ function InheritancePage() {
   const set = <K extends keyof HeirsInput>(key: K, value: HeirsInput[K]) =>
     setHeirs((h) => ({ ...h, [key]: value }));
 
-  const result = useMemo(() => calculateInheritance(heirs), [heirs]);
+  const deferredHeirs = useDeferredValue(heirs);
+  const result = useMemo(() => calculateInheritance(deferredHeirs), [deferredHeirs]);
+
   const invalid = lang === "ur" ? "درست عدد درج کریں" : "Enter a valid number";
 
   const notes: string[] = [];
@@ -245,12 +251,14 @@ function InheritancePage() {
       </section>
 
       <div className="mt-6">
-        <EduBlock
-          ruling={c.inheritanceRuling}
-          mistakes={c.inheritanceMistakes}
-          evidence={c.inheritanceEvidence}
-          labels={{ ruling: c.ruling, mistakes: c.mistakes, evidence: c.evidence }}
-        />
+        <Suspense fallback={<div className="h-24 animate-pulse rounded-xl bg-muted/20" />}>
+          <EduBlock
+            ruling={c.inheritanceRuling}
+            mistakes={c.inheritanceMistakes}
+            evidence={c.inheritanceEvidence}
+            labels={{ ruling: c.ruling, mistakes: c.mistakes, evidence: c.evidence }}
+          />
+        </Suspense>
       </div>
     </PublicShell>
   );

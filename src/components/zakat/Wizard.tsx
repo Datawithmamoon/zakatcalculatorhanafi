@@ -1,13 +1,16 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, useDeferredValue } from "react";
 import { ArrowLeft, ArrowRight, Ban, RotateCcw } from "lucide-react";
 import type { StepKey } from "@/lib/zakat/i18n";
 import { presetById, type PresetId } from "@/lib/zakat/presets";
 import { useZakat } from "./context";
-import { ChoiceButton, EduPanel, Money, MoneyInput } from "./bits";
+import { ChoiceButton, Money, MoneyInput } from "./bits";
 import { MetalStep } from "./MetalStep";
 // Results (with the PDF generator) load only when the user finishes the wizard.
 const ResultsView = lazy(() =>
   import("./ResultsView").then((m) => ({ default: m.ResultsView })),
+);
+const EduPanel = lazy(() =>
+  import("./bits").then((m) => ({ default: m.EduPanel })),
 );
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -23,7 +26,7 @@ const MONEY_GROUPS: Partial<Record<StepKey, MoneyGroup>> = {
 };
 
 export function Wizard() {
-  const { t, lang, input, update, setMoney, reset, config } = useZakat();
+  const { t, input, update, setMoney, reset, config } = useZakat();
   const [index, setIndex] = useState(0);
   const [showResults, setShowResults] = useState(false);
   // Every user answers the complete questionnaire — no quick templates.
@@ -33,7 +36,9 @@ export function Wizard() {
   const stepKey = (steps[index] ?? steps[0]) as StepKey;
   const copy = t.steps[stepKey];
   const group = MONEY_GROUPS[stepKey];
-  const result = useMemo(() => calculateZakat(input, config), [input, config]);
+
+  const deferredInput = useDeferredValue(input);
+  const result = useMemo(() => calculateZakat(deferredInput, config), [deferredInput, config]);
 
   const blockedByHawl = stepKey === "hawl" && !input.hawlCompleted;
   const isLast = index === steps.length - 1;
@@ -186,7 +191,9 @@ export function Wizard() {
             </div>
           )}
 
-          <EduPanel edu={copy.edu} stepKey={stepKey} />
+          <Suspense fallback={<div className="h-24 animate-pulse rounded-xl bg-muted/20" />}>
+            <EduPanel edu={copy.edu} stepKey={stepKey} />
+          </Suspense>
         </div>
       </section>
 

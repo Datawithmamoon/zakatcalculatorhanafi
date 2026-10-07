@@ -109,7 +109,7 @@ export interface HeirShare {
   /** Group sahm in the corrected (tashih) mas'alah. */
   finalSahm: number;
   perPersonSahm: number;
-  note?: string;
+  note?: string | undefined;
 }
 
 export interface ExcludedHeir {
@@ -160,7 +160,7 @@ interface Draft {
   share: Frac;
   basis: Basis;
   fard: string;
-  note?: string;
+  note?: string | undefined;
 }
 interface Unit {
   key: string;
@@ -197,13 +197,13 @@ export function calculateInheritance(input: HeirsInput): InheritanceResult {
   // ---- people
   let spouse = input.spouse;
   let wives = spouse === "wife" ? Math.min(4, Math.max(1, int(input.wives) || 1)) : 0;
-  if (spouse === "wife" && int(dt.wife) > 0) {
-    const d = Math.min(wives, int(dt.wife));
+  if (spouse === "wife" && int(dt["wife"]) > 0) {
+    const d = Math.min(wives, int(dt["wife"]));
     exclude("wife", d, "diedTogether");
     wives -= d;
     if (wives === 0) spouse = "none";
   }
-  if (spouse === "husband" && int(dt.husband) > 0) {
+  if (spouse === "husband" && int(dt["husband"]) > 0) {
     exclude("husband", 1, "diedTogether");
     spouse = "none";
   }
@@ -408,7 +408,7 @@ export function calculateInheritance(input: HeirsInput): InheritanceResult {
   t({ key: "fullCousins", count: cous, weight: 1 });
 
   const idx = tiers.findIndex((x) => x.length > 0);
-  const residuaries = idx >= 0 ? tiers[idx] : [];
+  const residuaries: Unit[] = (idx >= 0 ? tiers[idx] : undefined) ?? [];
   if (idx >= 0) {
     for (const tier of tiers.slice(idx + 1))
       for (const u of tier) {

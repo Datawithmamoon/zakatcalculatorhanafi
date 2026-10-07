@@ -12,30 +12,30 @@ export function PublicShell({ children }: { children: ReactNode }) {
   return (
     <div className={`surface-pattern min-h-screen bg-background ${urdu ? "font-urdu" : ""}`}>
       <header className="gradient-emerald text-primary-foreground">
-        <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-4">
-          <Link to="/" className="flex items-center gap-3">
+        <div className="mx-auto flex max-w-3xl flex-col gap-2 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3 sm:py-4">
+          <Link to="/" className="flex min-w-0 items-center gap-3">
             <span
               className="gradient-gold flex size-10 items-center justify-center rounded-xl text-lg font-bold text-gold-foreground"
               aria-hidden
             >
               ۞
             </span>
-            <span className="text-base font-semibold">{c.appName}</span>
+            <span className="min-w-0 truncate text-base font-semibold">{c.appName}</span>
           </Link>
-          <nav aria-label="Main" className="flex items-center gap-1 text-sm">
-            <Link to="/zakat-calculator" className="rounded-md px-3 py-2 underline-offset-4 hover:underline">
+          <nav aria-label="Main" className="flex min-w-0 flex-wrap items-center gap-x-1 gap-y-1 text-sm">
+            <Link to="/zakat-calculator" className="rounded-md px-2 py-2 sm:px-3 underline-offset-4 hover:underline">
               {c.navCalculator}
             </Link>
             <Link
               to="/haq-mehr-calculator"
-              className="rounded-md px-3 py-2 underline-offset-4 hover:underline"
+              className="rounded-md px-2 py-2 sm:px-3 underline-offset-4 hover:underline"
             >
               {lang === "ur" ? "حقِ مہر" : "Haq Mehr"}
             </Link>
-            <Link to="/guide" className="rounded-md px-3 py-2 underline-offset-4 hover:underline">
+            <Link to="/guide" className="rounded-md px-2 py-2 sm:px-3 underline-offset-4 hover:underline">
               {c.navGuide}
             </Link>
-            <Link to="/faq" className="rounded-md px-3 py-2 underline-offset-4 hover:underline">
+            <Link to="/faq" className="rounded-md px-2 py-2 sm:px-3 underline-offset-4 hover:underline">
               {c.navFaq}
             </Link>
             <button

@@ -4,7 +4,7 @@ import { PublicShell } from "@/components/PublicShell";
 import { CheckField, NumField, useMoneyFormat } from "@/components/calculators/bits";
 import { calculateInheritance, emptyHeirs, type HeirsInput } from "@/lib/calculators/inheritance";
 import { calcCopy } from "@/lib/calculators/copy";
-import { useLangPref } from "@/lib/zzakat/useLangPref";
+import { useLangPref } from "@/lib/zakat/useLangPref";
 import { useSettings } from "@/lib/settings";
 import { Label } from "@/components/ui/label";
 

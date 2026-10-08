@@ -52,6 +52,56 @@ export const Route = createFileRoute("/inheritance-calculator")({
   component: InheritancePage,
 });
 
+type Field = [keyof HeirsInput, string, string, "num" | "bool"];
+const EXTRA_GROUPS: { en: string; ur: string; fields: Field[] }[] = [
+  {
+    en: "Grandparents & grandchildren",
+    ur: "دادا دادی، نانی اور پوتے پوتیاں",
+    fields: [
+      ["paternalGrandmother", "Paternal grandmother", "دادی", "bool"],
+      ["maternalGrandmother", "Maternal grandmother", "نانی", "bool"],
+      ["sonsSons", "Son's sons", "پوتے", "num"],
+      ["sonsDaughters", "Son's daughters", "پوتیاں", "num"],
+    ],
+  },
+  {
+    en: "Paternal & uterine siblings",
+    ur: "علاتی و اخیافی بہن بھائی",
+    fields: [
+      ["consanguineBrothers", "Paternal half-brothers", "علاتی بھائی", "num"],
+      ["consanguineSisters", "Paternal half-sisters", "علاتی بہنیں", "num"],
+      ["uterineBrothers", "Maternal half-brothers", "اخیافی بھائی", "num"],
+      ["uterineSisters", "Maternal half-sisters", "اخیافی بہنیں", "num"],
+    ],
+  },
+  {
+    en: "Extended agnates ('Asabah)",
+    ur: "دیگر عصبات",
+    fields: [
+      ["fullNephews", "Full brother's sons", "حقیقی بھتیجے", "num"],
+      ["consanguineNephews", "Paternal brother's sons", "علاتی بھتیجے", "num"],
+      ["fullUncles", "Full paternal uncles", "حقیقی چچا", "num"],
+      ["consanguineUncles", "Paternal half-uncles", "علاتی چچا", "num"],
+      ["fullCousins", "Full uncle's sons", "چچا زاد بھائی", "num"],
+    ],
+  },
+  {
+    en: "Distant kindred (Dhawu al-Arham)",
+    ur: "ذوی الارحام",
+    fields: [
+      ["daughtersSons", "Daughter's sons", "نواسے", "num"],
+      ["daughtersDaughters", "Daughter's daughters", "نواسیاں", "num"],
+      ["maternalGrandfather", "Maternal grandfather", "نانا", "bool"],
+      ["sistersSons", "Sister's sons", "بھانجے", "num"],
+      ["sistersDaughters", "Sister's daughters", "بھانجیاں", "num"],
+      ["brothersDaughters", "Brother's daughters", "بھتیجیاں", "num"],
+      ["paternalAunts", "Paternal aunts", "پھوپھیاں", "num"],
+      ["maternalUncles", "Maternal uncles", "ماموں", "num"],
+      ["maternalAunts", "Maternal aunts", "خالائیں", "num"],
+    ],
+  },
+];
+
 function fractionLabel(fraction: number): string {
   return `${(fraction * 100).toFixed(2)}%`;
 }
@@ -70,11 +120,18 @@ function InheritancePage() {
   const deferredHeirs = useDeferredValue(heirs);
   const result = useMemo(() => calculateInheritance(deferredHeirs), [deferredHeirs]);
 
-  const invalid = lang === "ur" ? "درست عدد درج کریں" : "Enter a valid number";
+  const ur = lang === "ur";
+  const invalid = ur ? "درست عدد درج کریں" : "Enter a valid number";
+  const name = (key: string) => {
+    const f = EXTRA_GROUPS.flatMap((g) => g.fields).find((x) => x[0] === key);
+    return c.heirNames[key] ?? (f ? (ur ? f[2] : f[1]) : key);
+  };
 
   const notes: string[] = [];
   if (result.awlApplied) notes.push(c.awlNote);
   if (result.raddApplied) notes.push(c.raddNote);
+  if (result.dhawuApplied)
+    notes.push(ur ? "ذوی الارحام کو ترکہ دیا گیا۔" : "Estate passed to distant kindred (Dhawu al-Arham).");
   if (result.warnings.includes("siblings-excluded")) notes.push(c.siblingsExcluded);
   if (result.warnings.includes("grandmother-excluded")) notes.push(c.grandmotherExcluded);
 
@@ -197,6 +254,37 @@ function InheritancePage() {
             />
           )}
         </div>
+
+        {EXTRA_GROUPS.map((g) => (
+          <details key={g.en} className="rounded-xl border bg-muted/20 p-3">
+            <summary className="min-h-11 cursor-pointer content-center text-sm font-medium">
+              {lang === "ur" ? g.ur : g.en}
+            </summary>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              {g.fields.map(([key, en, ur, kind]) =>
+                kind === "bool" ? (
+                  <CheckField
+                    key={key}
+                    id={`inh-${key}`}
+                    label={lang === "ur" ? ur : en}
+                    checked={Boolean(heirs[key])}
+                    onChange={(v) => set(key, v as never)}
+                  />
+                ) : (
+                  <NumField
+                    key={key}
+                    id={`inh-${key}`}
+                    label={lang === "ur" ? ur : en}
+                    value={Number(heirs[key] ?? 0)}
+                    onChange={(v) => set(key, v as never)}
+                    integer
+                    invalidText={invalid}
+                  />
+                ),
+              )}
+            </div>
+          </details>
+        ))}
       </div>
 
       <section className="mt-6 rounded-2xl border bg-card p-4 shadow-soft sm:p-6" aria-live="polite">
@@ -210,6 +298,8 @@ function InheritancePage() {
                 <thead>
                   <tr className="border-b text-start text-xs uppercase text-muted-foreground">
                     <th className="py-2 text-start font-medium">{c.heir}</th>
+                    <th className="py-2 text-start font-medium">{ur ? "فرض/عصبہ" : "Basis"}</th>
+                    <th className="py-2 text-start font-medium">{ur ? "سہام" : "Sahm"}</th>
                     <th className="py-2 text-start font-medium">{c.share}</th>
                     <th className="py-2 text-end font-medium">{c.amount}</th>
                   </tr>
@@ -218,8 +308,12 @@ function InheritancePage() {
                   {result.shares.map((s) => (
                     <tr key={s.key} className="border-b border-border/60 last:border-b-0">
                       <td className="py-2">
-                        {c.heirNames[s.key] ?? s.key}
+                        {name(s.key)}
                         {s.count > 1 && <span className="text-muted-foreground"> ×{s.count}</span>}
+                      </td>
+                      <td className="py-2 text-muted-foreground" dir="ltr">{s.fard}</td>
+                      <td className="py-2 text-muted-foreground" dir="ltr">
+                        {s.finalSahm}/{result.tashihAsl}
                       </td>
                       <td className="py-2 text-muted-foreground">{fractionLabel(s.fraction)}</td>
                       <td className="py-2 text-end font-medium">
@@ -239,7 +333,32 @@ function InheritancePage() {
               <span>{c.totalDistributed}</span>
               <span>{money(result.distributed)}</span>
             </div>
+            <dl className="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
+              {[
+                [ur ? "اصلِ مسئلہ" : "Asl al-mas'alah", result.asl],
+                [ur ? "عول/رد کے بعد" : "After 'Awl/Radd", result.aslAfter],
+                [ur ? "تصحیح" : "Tashih", result.tashihAsl],
+              ].map(([l, v]) => (
+                <div key={String(l)} className="rounded-lg bg-muted/40 p-2">
+                  <dt className="text-muted-foreground">{l}</dt>
+                  <dd className="font-semibold">{v}</dd>
+                </div>
+              ))}
+            </dl>
           </>
+        )}
+        {result.excluded.length > 0 && (
+          <div className="mt-4">
+            <h3 className="text-sm font-semibold">{ur ? "محجوب ورثاء" : "Excluded heirs"}</h3>
+            <ul className="mt-1 space-y-1 text-xs text-muted-foreground">
+              {result.excluded.map((e) => (
+                <li key={e.key}>
+                  <span className="font-medium text-foreground">{name(e.key)}</span>
+                  {e.count > 1 ? ` ×${e.count}` : ""} — {e.reason}
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
         {notes.length > 0 && (
           <ul className="mt-3 list-disc space-y-1 ps-5 text-xs text-muted-foreground">

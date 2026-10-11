@@ -310,3 +310,26 @@
   }
 }
 
+
+/* Calculator report printing: only the active report is printed. */
+@media print {
+  body.printing-report * {
+    visibility: hidden;
+  }
+  body.printing-report .report-target,
+  body.printing-report .report-target * {
+    visibility: visible;
+  }
+  body.printing-report .report-target {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    width: 100%;
+  }
+  body.printing-report .report-target .report-header {
+    display: block !important;
+  }
+  body.printing-report .report-target .overflow-x-auto {
+    overflow: visible !important;
+  }
+}

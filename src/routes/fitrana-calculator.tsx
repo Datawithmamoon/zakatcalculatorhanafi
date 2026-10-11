@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { lazy, Suspense, useDeferredValue, useMemo, useState } from "react";
 import { PublicShell } from "@/components/PublicShell";
+import { ReportArea } from "@/components/calculators/ReportArea";
 import { CheckField, NumField, ResultRow, useMoneyFormat } from "@/components/calculators/bits";
 import { calculateFitrana } from "@/lib/calculators/fitrana";
 import { calcCopy } from "@/lib/calculators/copy";
@@ -128,6 +129,7 @@ function FitranaPage() {
         )}
       </div>
 
+      <ReportArea ur={lang === "ur"} title={c.fitranaTitle} filename="fitrana" shareText={`${c.totalDue}: ${money(result.total)}`}>
       <section className="mt-6 rounded-2xl border bg-card p-4 shadow-soft sm:p-6" aria-live="polite">
         <h2 className="mb-2 text-base font-semibold text-foreground">{c.result}</h2>
         <ResultRow label={c.perPerson} value={money(result.perPerson)} />
@@ -138,6 +140,7 @@ function FitranaPage() {
         <ResultRow label={c.totalDue} value={money(result.total)} strong />
         <p className="mt-3 text-xs text-muted-foreground">{c.currencyNote}</p>
       </section>
+      </ReportArea>
 
       <div className="mt-6">
         <Suspense fallback={<div className="h-24 animate-pulse rounded-xl bg-muted/20" />}>

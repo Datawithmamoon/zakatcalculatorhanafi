@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { lazy, Suspense, useDeferredValue, useMemo, useState } from "react";
 import { PublicShell } from "@/components/PublicShell";
+import { ReportArea } from "@/components/calculators/ReportArea";
 import { CheckField, NumField, useMoneyFormat } from "@/components/calculators/bits";
 import { calculateInheritance, emptyHeirs, type HeirsInput } from "@/lib/calculators/inheritance";
 import { calcCopy } from "@/lib/calculators/copy";
@@ -102,6 +103,13 @@ const EXTRA_GROUPS: { en: string; ur: string; fields: Field[] }[] = [
     ],
   },
 ];
+
+const CATEGORY: Record<string, [string, string]> = {
+  fixed: ["Ashab al-Faraid", "اصحاب الفروض"],
+  residue: ["'Asabah", "عصبہ"],
+  radd: ["Radd", "رد"],
+  dhawu: ["Dhawu al-Arham", "ذوی الارحام"],
+};
 
 function fractionLabel(fraction: number): string {
   return `${(fraction * 100).toFixed(2)}%`;
@@ -288,6 +296,7 @@ function InheritancePage() {
         ))}
       </div>
 
+      <ReportArea ur={ur} title={c.inheritanceTitle} filename="inheritance" shareText={`${c.inheritanceTitle} — ${c.totalDistributed}: ${money(result.distributed)}`}>
       <section className="mt-6 rounded-2xl border bg-card p-4 shadow-soft sm:p-6" aria-live="polite">
         <h2 className="mb-3 text-base font-semibold text-foreground">{c.result}</h2>
         {result.shares.length === 0 ? (
@@ -312,7 +321,9 @@ function InheritancePage() {
                         {name(s.key)}
                         {s.count > 1 && <span className="text-muted-foreground"> ×{s.count}</span>}
                       </td>
-                      <td className="py-2 text-muted-foreground" dir="ltr">{s.fard}</td>
+                      <td className="py-2 text-muted-foreground">
+                        {CATEGORY[s.basis]?.[ur ? 1 : 0]} · <span dir="ltr">{s.fard}</span>
+                      </td>
                       <td className="py-2 text-muted-foreground" dir="ltr">
                         {s.finalSahm}/{result.tashihAsl}
                       </td>
@@ -371,6 +382,7 @@ function InheritancePage() {
       </section>
 
       <InheritanceSpecial heirs={deferredHeirs} ur={ur} money={money} name={name} invalid={invalid} />
+      </ReportArea>
 
       <div className="mt-6">
         <Suspense fallback={<div className="h-24 animate-pulse rounded-xl bg-muted/20" />}>

@@ -65,6 +65,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
           </Link>
         </nav>
         {c.footerNote}
+        <p className="mt-2">Developed by Muhammad Mamoon Raza</p>
       </footer>
     </div>
   );

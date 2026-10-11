@@ -7,6 +7,7 @@ import { calcCopy } from "@/lib/calculators/copy";
 import { useLangPref } from "@/lib/zakat/useLangPref";
 import { useSettings } from "@/lib/settings";
 import { Label } from "@/components/ui/label";
+import { InheritanceSpecial } from "@/components/calculators/InheritanceSpecial";
 
 const SITE = "https://zakatcalculatorhanafi.lovable.app";
 const title = "Islamic Inheritance Calculator (Faraid) — Hanafi | English & Urdu";
@@ -368,6 +369,8 @@ function InheritancePage() {
           </ul>
         )}
       </section>
+
+      <InheritanceSpecial heirs={deferredHeirs} ur={ur} money={money} name={name} invalid={invalid} />
 
       <div className="mt-6">
         <Suspense fallback={<div className="h-24 animate-pulse rounded-xl bg-muted/20" />}>

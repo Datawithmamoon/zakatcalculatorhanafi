@@ -61,6 +61,7 @@ export function AboutZakat() {
           </Link>
         </nav>
         {t.disclaimer}
+        <p className="mt-2">Developed by Muhammad Mamoon Raza</p>
       </footer>
     </>
   );

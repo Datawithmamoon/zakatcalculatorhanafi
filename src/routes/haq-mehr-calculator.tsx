@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { lazy, Suspense, useDeferredValue, useMemo, useState } from "react";
 import { PublicShell } from "@/components/PublicShell";
+import { ReportArea } from "@/components/calculators/ReportArea";
 import { NumField, ResultRow } from "@/components/calculators/bits";
 import { useLangPref } from "@/lib/zakat/useLangPref";
 import { useLivePrices } from "@/lib/zakat/useLivePrices";
@@ -184,6 +185,7 @@ function HaqMehrPage() {
         </div>
       </div>
 
+      <ReportArea ur={lang === "ur"} title={c.title} filename="haq-mehr" shareText={`${c.value}: ${total !== null ? money(total) : "—"}`}>
       <section className="mt-6 rounded-2xl border bg-card p-4 shadow-soft sm:p-6" aria-live="polite">
         <h2 className="mb-2 text-base font-semibold text-foreground">{c.result}</h2>
         <ResultRow
@@ -208,7 +210,7 @@ function HaqMehrPage() {
             type="button"
             variant="outline"
             size="sm"
-            className="min-h-11"
+            className="no-print min-h-11"
             onClick={prices.refresh}
           >
             {c.refresh}
@@ -225,6 +227,7 @@ function HaqMehrPage() {
           {c.source}: {prices.source}
         </p>
       </section>
+      </ReportArea>
 
       <div className="mt-6">
         <Suspense fallback={<div className="h-24 animate-pulse rounded-xl bg-muted/20" />}>

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { lazy, Suspense, useDeferredValue, useMemo, useState } from "react";
 import { PublicShell } from "@/components/PublicShell";
+import { ReportArea } from "@/components/calculators/ReportArea";
 import { NumField, ResultRow, useMoneyFormat } from "@/components/calculators/bits";
 import { calculateUshr, type IrrigationType } from "@/lib/calculators/ushr";
 import { calcCopy } from "@/lib/calculators/copy";
@@ -135,6 +136,7 @@ function UshrPage() {
         </fieldset>
       </div>
 
+      <ReportArea ur={lang === "ur"} title={c.ushrTitle} filename="ushr" shareText={`${c.ushrDue}: ${money(result.ushrValue)}`}>
       <section className="mt-6 rounded-2xl border bg-card p-4 shadow-soft sm:p-6" aria-live="polite">
         <h2 className="mb-2 text-base font-semibold text-foreground">{c.result}</h2>
         <ResultRow label={c.rateLabel} value={`${(result.rate * 100).toFixed(2)}%`} />
@@ -148,6 +150,7 @@ function UshrPage() {
         <ResultRow label={c.ushrDue} value={money(result.ushrValue)} strong />
         <p className="mt-3 text-xs text-muted-foreground">{c.currencyNote}</p>
       </section>
+      </ReportArea>
 
       <div className="mt-6">
         <Suspense fallback={<div className="h-24 animate-pulse rounded-xl bg-muted/20" />}>

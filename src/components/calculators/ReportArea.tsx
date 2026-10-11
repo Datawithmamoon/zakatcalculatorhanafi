@@ -1,6 +1,7 @@
 import { useRef, useState, type ReactNode } from "react";
 import { Download, Loader2, Printer, Share2 } from "lucide-react";
 import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { saveBlob, shareContent, printOrFallback } from "@/lib/platform";
 
@@ -174,6 +175,7 @@ export function ReportArea({
           {ur ? "شیئر کریں" : "Share result"}
         </Button>
       </div>
+      <Toaster />
     </>
   );
 }

@@ -1,10 +1,10 @@
 # Zakat Pro
 
-Build a Professional Hanafi Zakat Calculator Web Application
+I have Built a Professional Hanafi Zakat Calculator Web Application
 
 
 
-Create a modern, responsive, multilingual (Urdu + English) Islamic Zakat Calculator based strictly on Hanafi Fiqh.
+Created a modern, responsive, multilingual (Urdu + English) Islamic Zakat Calculator based strictly on Hanafi Fiqh.
 
 
 

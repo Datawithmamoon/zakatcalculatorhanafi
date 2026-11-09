@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Download, Loader2, Printer, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
@@ -99,6 +99,14 @@ export function ReportArea({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState<null | "pdf" | "share">(null);
+  const [generatedAt, setGeneratedAt] = useState("");
+
+  useEffect(() => {
+    setGeneratedAt(new Intl.DateTimeFormat(ur ? "ur-PK" : "en-GB", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    }).format(new Date()));
+  }, [ur]);
 
   const pdf = async () => {
     if (!ref.current) throw new Error("no report");
@@ -157,7 +165,7 @@ export function ReportArea({
         <div className="report-header mb-4 hidden border-b pb-3">
           <p className="text-lg font-semibold text-foreground">{title}</p>
           <p className="text-xs text-muted-foreground">
-            {new Date().toLocaleString(ur ? "ur-PK" : "en-GB")} — zakatcalculatorhanafi.lovable.app
+            {generatedAt ? `${generatedAt} — ` : ""}zakatcalculatorhanafi.lovable.app
           </p>
         </div>
         {children}

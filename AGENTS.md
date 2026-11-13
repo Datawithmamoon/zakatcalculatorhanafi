@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Keep `/` as the calculator-selection page and each calculator on its own top-level route so navigation, SEO, and calculator logic remain independent.
+- Protect the app-hosted MCP server with the managed OAuth issuer and preserve validated same-origin consent return paths through every sign-in method, so external tools cannot bypass user authorization.

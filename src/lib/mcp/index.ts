@@ -1,4 +1,4 @@
-import { defineMcp } from "@lovable.dev/mcp-js";
+import { auth, defineMcp } from "@lovable.dev/mcp-js";
 import calculateZakatTool from "./tools/calculate-zakat";
 import getMetalPricesTool from "./tools/get-metal-prices";
 import getNisabTool from "./tools/get-nisab";
@@ -9,6 +9,10 @@ export default defineMcp({
   name: "zakat-pro",
   title: "Zakat Pro",
   version: "0.1.0",
+  auth: auth.oauth.issuer({
+    issuer: `https://${import.meta.env["VITE_SUPABASE_PROJECT_ID"] ?? "project-ref-unset"}.supabase.co/auth/v1`,
+    acceptedAudiences: "authenticated",
+  }),
   instructions:
     "Tools for the Hanafi Zakat Calculator. Use `get_metal_prices` for live gold/silver spot rates, `get_nisab` for the current Nisab thresholds, `calculate_zakat` to compute Zakat due from a person's assets and liabilities under Hanafi fiqh, and `list_faqs` / `list_guide_articles` for the site's published Zakat guidance. Results are educational estimates; recommend consulting a qualified Hanafi Mufti for complex cases.",
   tools: [

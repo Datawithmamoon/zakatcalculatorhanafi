@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { ArrowLeft, LogIn } from "lucide-react";
+import { oauthReturnPath } from "@/lib/oauth-return-path";
 
 const title = "Admin Sign In — Hanafi Zakat Calculator";
 const description =
@@ -29,7 +30,7 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const safePath = (p?: string) => (p && p.startsWith("/") && !p.startsWith("//") ? p : "/admin");
+const safePath = (p?: string) => (p ? oauthReturnPath(p) : "/admin");
 
 function AuthPage() {
   const navigate = useNavigate();
@@ -43,15 +44,16 @@ function AuthPage() {
     e.preventDefault();
     setBusy(true);
     try {
+      const returnPath = safePath(next);
       if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate({ to: safePath(next) });
+        navigate({ to: returnPath });
       } else {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: `${window.location.origin}${safePath(next)}` },
+          options: { emailRedirectTo: new URL(returnPath, window.location.origin).href },
         });
         if (error) throw error;
         toast.success("Account created. You can sign in now.");
@@ -65,15 +67,16 @@ function AuthPage() {
   };
 
   const google = async () => {
+    const returnPath = safePath(next);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+      redirect_uri: new URL(returnPath, window.location.origin).href,
     });
     if (result.error) {
       toast.error("Google sign-in failed");
       return;
     }
     if (result.redirected) return;
-    navigate({ to: safePath(next) });
+    navigate({ to: returnPath });
   };
 
   return (

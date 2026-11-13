@@ -20,14 +20,46 @@ type AuthorizationDetails = {
 };
 
 type OAuthApi = {
-  getAuthorizationDetails: (id: string) => Promise<{ data: AuthorizationDetails | null; error: { message: string } | null }>;
-  approveAuthorization: (id: string) => Promise<{ data: AuthorizationDetails | null; error: { message: string } | null }>;
-  denyAuthorization: (id: string) => Promise<{ data: AuthorizationDetails | null; error: { message: string } | null }>;
+  getAuthorizationDetails: (id: string) => Promise<{ data: unknown; error: { message: string } | null }>;
+  approveAuthorization: (id: string) => Promise<{ data: unknown; error: { message: string } | null }>;
+  denyAuthorization: (id: string) => Promise<{ data: unknown; error: { message: string } | null }>;
 };
 
 const oauth = (supabase.auth as typeof supabase.auth & { oauth: OAuthApi }).oauth;
 const title = "Connect an assistant — Zakat Pro";
 const description = "Review and approve an assistant's access to Zakat Pro tools.";
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return value !== null && typeof value === "object" ? value as Record<string, unknown> : null;
+}
+
+function normalizeDetails(value: unknown): AuthorizationDetails | null {
+  const raw = asRecord(value);
+  if (!raw) return null;
+  const client = asRecord(raw["client"]);
+  const name = typeof client?.["name"] === "string"
+    ? client["name"]
+    : typeof client?.["client_name"] === "string" ? client["client_name"] : null;
+  const redirectUri = typeof client?.["redirect_uri"] === "string" ? client["redirect_uri"] : null;
+  const redirectUris = Array.isArray(client?.["redirect_uris"])
+    ? client["redirect_uris"].filter((entry): entry is string => typeof entry === "string")
+    : null;
+  const rawScopes = raw["scopes"] ?? raw["requested_scopes"];
+  return {
+    client: client ? { name, client_name: name, redirect_uri: redirectUri, redirect_uris: redirectUris } : null,
+    scope: typeof raw["scope"] === "string" ? raw["scope"] : null,
+    scopes: Array.isArray(rawScopes) ? rawScopes.filter((scope): scope is string => typeof scope === "string") : null,
+    redirect_url: typeof raw["redirect_url"] === "string" ? raw["redirect_url"] : null,
+    redirect_to: typeof raw["redirect_to"] === "string" ? raw["redirect_to"] : null,
+  };
+}
+
+function redirectDestination(value: unknown): string | null {
+  const raw = asRecord(value);
+  return typeof raw?.["redirect_url"] === "string"
+    ? raw["redirect_url"]
+    : typeof raw?.["redirect_to"] === "string" ? raw["redirect_to"] : null;
+}
 
 export const Route = createFileRoute("/.lovable/oauth/consent")({
   ssr: false,
@@ -62,10 +94,11 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
       oauth.getAuthorizationDetails(authorizationId),
       supabase.auth.getUser(),
     ]);
-    if (error || !data) throw new Error("This authorization request is invalid or expired.");
-    const immediate = data.redirect_url ?? data.redirect_to;
-    if (immediate && !data.client) throw redirect({ href: immediate });
-    return { details: data, email: userData.user?.email ?? "Signed-in account" };
+    const details = normalizeDetails(data);
+    if (error || !details) throw new Error("This authorization request is invalid or expired.");
+    const immediate = redirectDestination(data);
+    if (immediate && !details.client) throw redirect({ href: immediate });
+    return { details, email: userData.user?.email ?? "Signed-in account" };
   },
   component: ConsentPage,
   errorComponent: ConsentError,
@@ -90,7 +123,7 @@ function ConsentPage() {
         ? await oauth.approveAuthorization(authorizationId)
         : await oauth.denyAuthorization(authorizationId);
       if (actionError || !data) throw new Error("The decision could not be completed.");
-      const destination = data.redirect_url ?? data.redirect_to;
+      const destination = redirectDestination(data);
       if (!destination) throw new Error("The authorization service did not provide a return address.");
       window.location.assign(destination);
     } catch {
